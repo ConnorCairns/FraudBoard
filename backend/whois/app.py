@@ -2,8 +2,8 @@ import whois
 import json
 
 def lambda_handler(event, context):
-    body = json.loads(event["body"])
-    w = whois.whois(body["URL"])
+    URL = event['queryStringParameters']['url']
+    w = whois.whois(URL)
 
     dump = json.dumps(w, sort_keys=True, default=str)
 

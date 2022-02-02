@@ -1,9 +1,8 @@
 import boto3
 import json
 
-def handler(event, context):
-    body = json.loads(event["body"])
-    tld = body["TLD"]
+def lambda_handler(event, context):
+    tld = event['queryStringParameters']['tld']
 
     route53 = boto3.client("route53domains", region_name="us-east-1")
 

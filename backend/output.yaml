@@ -1,0 +1,72 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: AWS::Serverless-2016-10-31
+Description: 'fraud-investments
+
+  Sample SAM Template for fraud-investments
+
+  '
+Globals:
+  Function:
+    Timeout: 3
+Resources:
+  MyAPI:
+    Type: AWS::Serverless::Api
+    dependsOn:
+    - whoisFunction
+    - addDomain
+    - getTldPrice
+    Properties:
+      Name: Fraud Dashboard API
+      StageName: v1
+    Metadata:
+      SamResourceId: MyAPI
+  whoisFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: s3://fraud-dashboard-bucket/b9c49db43a2313bca11d5bf9b7f847c2
+      Handler: app.lambda_handler
+      Runtime: python3.9
+      Architectures:
+      - arm64
+      Events:
+        MyAPI:
+          Type: Api
+          Properties:
+            Path: /whois
+            Method: GET
+    Metadata:
+      SamResourceId: whoisFunction
+  addDomain:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: s3://fraud-dashboard-bucket/775462aaff2439b91192ad11c6e04a61
+      Handler: app.handler
+      Runtime: python3.9
+      Timeout: 10
+      Architectures:
+      - arm64
+      Events:
+        MyAPI:
+          Type: Api
+          Properties:
+            Path: /add-domain
+            Method: POST
+    Metadata:
+      SamResourceId: addDomain
+  getTldPrice:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: s3://fraud-dashboard-bucket/60ec79ea6b8b399b354af93af6d04ab1
+      Handler: app.handler
+      Runtime: python3.9
+      Timeout: 15
+      Architectures:
+      - arm64
+      Events:
+        MyAPI:
+          Type: Api
+          Properties:
+            Path: /get-tld-price
+            Method: GET
+    Metadata:
+      SamResourceId: getTldPrice

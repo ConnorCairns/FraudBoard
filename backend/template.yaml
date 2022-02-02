@@ -11,61 +11,89 @@ Globals:
     Timeout: 3
 
 Resources:
-  whoisFunction:
+  WhoisFunction:
     Type: AWS::Serverless::Function # More info about Function Resource: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#awsserverlessfunction
     Properties:
-      CodeUri: whois/
-      Handler: app.lambda_handler
-      Runtime: python3.9
+      PackageType: Image
       Architectures:
-        - arm64
+        - x86_64
       Events:
-        whois_event:
+        WhoIs:
           Type: Api # More info about API Event Source: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#api
           Properties:
             Path: /whois
             Method: get
-  addDomain:
+    Metadata:
+      Dockerfile: Dockerfile
+      DockerContext: ./whois
+      DockerTag: python3.9-v1
+
+  AddDomain:
     Type: AWS::Serverless::Function # More info about Function Resource: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#awsserverlessfunction
     Properties:
-      CodeUri: add_domain/
-      Handler: app.handler
-      Runtime: python3.9
-      Timeout: 10
+      PackageType: Image
       Architectures:
-        - arm64
+        - x86_64
+      Timeout: 10
+      Policies:
+        - AmazonDynamoDBFullAccess
+        - AmazonRoute53DomainsReadOnlyAccess
       Events:
-        whois_event:
+        AddDomainAPI:
           Type: Api # More info about API Event Source: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#api
           Properties:
             Path: /add-domain
             Method: post
-  getTldPrice:
+    Metadata:
+      Dockerfile: Dockerfile
+      DockerContext: ./add_domain
+      DockerTag: python3.9-v1
+
+  GetTldPrice:
     Type: AWS::Serverless::Function # More info about Function Resource: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#awsserverlessfunction
     Properties:
-      CodeUri: get_tld_price/
-      Handler: app.handler
-      Runtime: python3.9
-      Timeout: 15
+      PackageType: Image
       Architectures:
-        - arm64
+        - x86_64
+      Timeout: 10
+      Policies:
+      - AmazonRoute53DomainsReadOnlyAccess
       Events:
-        whois_event:
+        TLDPriceAPI:
           Type: Api # More info about API Event Source: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#api
           Properties:
             Path: /get-tld-price
             Method: get
+    Metadata:
+      Dockerfile: Dockerfile
+      DockerContext: ./get_tld_price
+      DockerTag: python3.9-v1
 
 Outputs:
-  # ServerlessRestApi is an implicit API created out of Events key under Serverless::Function
-  # Find out more about other implicit resources you can reference within SAM
-  # https://github.com/awslabs/serverless-application-model/blob/master/docs/internals/generated_resources.rst#api
-  HelloWorldApi:
-    Description: "API Gateway endpoint URL for Prod stage for Hello World function"
-    Value: !Sub "https://${ServerlessRestApi}.execute-api.${AWS::Region}.amazonaws.com/Prod/hello/"
-  HelloWorldFunction:
-    Description: "Hello World Lambda Function ARN"
-    Value: !GetAtt HelloWorldFunction.Arn
-  HelloWorldFunctionIamRole:
-    Description: "Implicit IAM Role created for Hello World function"
-    Value: !GetAtt HelloWorldFunctionRole.Arn
+  WhoIsApi:
+    Description: "API Gateway endpoint URL for Prod stage for WhoIs function"
+    Value: !Sub "https://${ServerlessRestApi}.execute-api.${AWS::Region}.amazonaws.com/Prod/whois/"
+  WhoisFunction:
+    Description: "Whois Lambda Function ARN"
+    Value: !GetAtt WhoisFunction.Arn
+  WhoisFunctionIamRole:
+    Description: "Implicit IAM Role created for Multiply function"
+    Value: !GetAtt WhoisFunctionRole.Arn
+  AddDomainAPI:
+    Description: "API Gateway endpoint URL for Prod stage for addDomain function"
+    Value: !Sub "https://${ServerlessRestApi}.execute-api.${AWS::Region}.amazonaws.com/Prod/add-domain/"
+  AddDomain:
+    Description: "addDomain Lambda Function ARN"
+    Value: !GetAtt AddDomain.Arn
+  AddDomainIamRole:
+    Description: "Implicit IAM Role created for Multiply function"
+    Value: !GetAtt AddDomainRole.Arn
+  GetTLDPriceAPI:
+    Description: "API Gateway endpoint URL for Prod stage for getTLDPrice function"
+    Value: !Sub "https://${ServerlessRestApi}.execute-api.${AWS::Region}.amazonaws.com/Prod/get-tld-price/"
+  GetTldPrice:
+    Description: "getTldPrice Lambda Function ARN"
+    Value: !GetAtt GetTldPriceRole.Arn
+  GetTldPriceIamRole:
+    Description: "Implicit IAM Role created for Multiply function"
+    Value: !GetAtt GetTldPriceRole.Arn
