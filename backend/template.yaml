@@ -1,4 +1,4 @@
-AWSTemplateFormatVersion: '2010-09-09'
+AWSTemplateFormatVersion: "2010-09-09"
 Transform: AWS::Serverless-2016-10-31
 Description: >
   fraud_investments
@@ -11,6 +11,13 @@ Globals:
     Timeout: 3
 
 Resources:
+  ApiGatewayApi:
+    Type: AWS::Serverless:Api
+    DependsOn: [WhoisFunction, AddDomain, GetTldPrice]
+    Properties:
+      StageName: prod
+      Cors: "'*'"
+
   WhoisFunction:
     Type: AWS::Serverless::Function # More info about Function Resource: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#awsserverlessfunction
     Properties:
@@ -23,6 +30,8 @@ Resources:
           Properties:
             Path: /whois
             Method: get
+            RestApiId:
+              Ref: ApiGatewayApi
     Metadata:
       Dockerfile: Dockerfile
       DockerContext: ./whois
@@ -44,6 +53,8 @@ Resources:
           Properties:
             Path: /add-domain
             Method: post
+            RestApiId:
+              Ref: ApiGatewayApi
     Metadata:
       Dockerfile: Dockerfile
       DockerContext: ./add_domain
@@ -57,16 +68,40 @@ Resources:
         - x86_64
       Timeout: 10
       Policies:
-      - AmazonRoute53DomainsReadOnlyAccess
+        - AmazonRoute53DomainsReadOnlyAccess
       Events:
         TLDPriceAPI:
           Type: Api # More info about API Event Source: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#api
           Properties:
             Path: /get-tld-price
             Method: get
+            RestApiId:
+              Ref: ApiGatewayApi
     Metadata:
       Dockerfile: Dockerfile
       DockerContext: ./get_tld_price
+      DockerTag: python3.9-v1
+
+  GetDomains:
+    Type: AWS::Serverless::Function # More info about Function Resource: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#awsserverlessfunction
+    Properties:
+      PackageType: Image
+      Architectures:
+        - x86_64
+      Timeout: 10
+      Policies:
+        - AmazonDynamoDBFullAccess
+      Events:
+        TLDPriceAPI:
+          Type: Api # More info about API Event Source: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#api
+          Properties:
+            Path: /get-domains
+            Method: get
+            RestApiId:
+              Ref: ApiGatewayApi
+    Metadata:
+      Dockerfile: Dockerfile
+      DockerContext: ./get_domains
       DockerTag: python3.9-v1
 
 Outputs:
@@ -93,7 +128,16 @@ Outputs:
     Value: !Sub "https://${ServerlessRestApi}.execute-api.${AWS::Region}.amazonaws.com/Prod/get-tld-price/"
   GetTldPrice:
     Description: "getTldPrice Lambda Function ARN"
-    Value: !GetAtt GetTldPriceRole.Arn
+    Value: !GetAtt GetTldPrice.Arn
   GetTldPriceIamRole:
     Description: "Implicit IAM Role created for Multiply function"
     Value: !GetAtt GetTldPriceRole.Arn
+  GetDomainsAPI:
+    Description: "API Gateway endpoint URL for Prod stage for getTLDPrice function"
+    Value: !Sub "https://${ServerlessRestApi}.execute-api.${AWS::Region}.amazonaws.com/Prod/get-domains/"
+  GetDomains:
+    Description: "getTldPrice Lambda Function ARN"
+    Value: !GetAtt GetDomains.Arn
+  GetDomainsIamRole:
+    Description: "Implicit IAM Role created for Multiply function"
+    Value: !GetAtt GetDomainsRole.Arn

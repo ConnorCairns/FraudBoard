@@ -1,11 +1,12 @@
 import React, { useState } from 'react';
-import { styled, createTheme, ThemeProvider } from '@mui/material/styles';
-import { AppBar, Divider, Drawer, IconButton, ListItem, Toolbar, Typography, List, ListItemIcon, Box, Container, Grid, Paper, CssBaseline } from '@mui/material';
+import { styled } from '@mui/material/styles';
+import { AppBar, Divider, Drawer, IconButton, ListItemButton, Toolbar, Typography, List, ListItemIcon, Box, Container, Grid, Paper, CssBaseline } from '@mui/material';
 import MenuIcon from '@material-ui/icons/Menu';
 import { AppBarProps as MuiAppBarProps } from '@mui/material/AppBar';
 import { ChevronLeft } from '@material-ui/icons';
 import DashboardIcon from '@mui/icons-material/Dashboard';
 import { ListItemText } from '@material-ui/core';
+import { useNavigate } from 'react-router-dom';
 
 const drawerWidth: number = 210;
 
@@ -59,36 +60,37 @@ const CustomDrawer = styled(Drawer, {
 
 const Navbar = (): JSX.Element => {
     const [open, setOpen] = useState(false);
+    const navigate = useNavigate()
 
     return (
-                <>
-                    <CustomAppBar position="absolute" open={open}>
-                        <Toolbar>
-                            <IconButton onClick={() => setOpen(!open)} size="large" edge="start" color="inherit" sx={{ mr: 2, ...(open && { display: 'none' }) }}>
-                                <MenuIcon />
-                            </IconButton>
-                            <Typography component="h1" color="inherit" variant="h6">
-                                Fraud Dashboard
-                            </Typography>
-                        </Toolbar>
-                    </CustomAppBar>
-                    <CustomDrawer variant="permanent" open={open}>
-                        <Toolbar sx={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-end', px: [1] }}>
-                            <IconButton onClick={() => setOpen(!open)} >
-                                <ChevronLeft />
-                            </IconButton>
-                        </Toolbar>
-                        <Divider />
-                        <List>
-                            <ListItem button key={"Dashboard"}>
-                                <ListItemIcon>
-                                    <DashboardIcon />
-                                </ListItemIcon>
-                                <ListItemText primary="Dashboard" />
-                            </ListItem>
-                        </List>
-                    </CustomDrawer>
-                </>
+        <>
+            <CustomAppBar position="absolute" open={open}>
+                <Toolbar>
+                    <IconButton onClick={() => setOpen(!open)} size="large" edge="start" color="inherit" sx={{ mr: 2, ...(open && { display: 'none' }) }}>
+                        <MenuIcon />
+                    </IconButton>
+                    <Typography component="h1" color="inherit" variant="h6">
+                        Fraud Dashboard
+                    </Typography>
+                </Toolbar>
+            </CustomAppBar>
+            <CustomDrawer variant="permanent" open={open}>
+                <Toolbar sx={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-end', px: [1] }}>
+                    <IconButton onClick={() => setOpen(!open)} >
+                        <ChevronLeft />
+                    </IconButton>
+                </Toolbar>
+                <Divider />
+                <List>
+                    <ListItemButton key={"Dashboard"} onClick={() => navigate("/")}>
+                        <ListItemIcon >
+                            <DashboardIcon />
+                        </ListItemIcon>
+                        <ListItemText primary="Dashboard" />
+                    </ListItemButton>
+                </List>
+            </CustomDrawer >
+        </>
     )
 }
 
