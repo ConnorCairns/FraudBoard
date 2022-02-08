@@ -14,6 +14,7 @@ const useFetch = (url) => {
             if (cache.current[url]) {
                 setData(cache.current[url])
                 setStatus('fetched')
+                console.log("used cache")
             }
 
             const response = await fetch(url)

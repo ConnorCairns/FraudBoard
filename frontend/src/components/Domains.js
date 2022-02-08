@@ -1,20 +1,71 @@
 import { useTheme } from '@material-ui/core';
-import { Link, Table, TableBody, TableCell, TableHead, TableRow, Typography } from '@mui/material';
+import { Paper, Typography } from '@mui/material';
 import useFetch from '../hooks/useFetch.js';
-import DomainRow from './DomainRow.js';
+import Title from './Title';
+import { DataGrid } from '@mui/x-data-grid';
+import { useEffect, useState } from 'react';
 
-const Domains = () => {
-    const URL = "http://localhost:4000/get-domains"
+const columns = [
+    { field: 'domain_name', headerName: 'Domain Name', flex: 1 },
+    { field: 'creation_date', headerName: 'Registration Date', flex: 1 },
+    { field: 'expiration_date', headerName: 'Expiration Date', flex: 1 },
+    { field: 'registrar', headerName: 'Registrar', flex: 1 },
+    { field: 'domain_cost', headerName: 'Amount Spent', flex: 1, align: 'right' },
+
+]
+
+const unmarshall = (output) => {
+    return output.map((item => {
+        let newObj = {}
+
+        for (var key in item) {
+            newObj[key] = Object.values(item[key])[0]
+        }
+
+        return newObj
+
+    }))
+}
+
+const Domains = ({ title = "Domains", DataGridProps, reqLimit = 5 }) => {
+    const URL = `http://localhost:4000/get-domains?limit=${reqLimit}`
     const [status, domains] = useFetch(URL)
+    const [rows, setRows] = useState();
+
+    useEffect(() => {
+        if (status === 'fetched') {
+            let test = unmarshall(domains)
+            console.log(test)
+            let rows = domains.map((domain) => {
+                return {
+                    'domainName': domain.domain_name.S,
+                    'registrationDate': domain.creation_date.S,
+                    'expirationDate': domain.expiration_date.S,
+                    'registar': domain.registrar.S,
+                    'amount': `$${domain.domain_cost.N}`
+                }
+            })
+            setRows(test)
+        }
+
+    }, [status, domains])
 
     const theme = useTheme()
 
     return (
-        <>
-            {status === 'fetched' ?
+        <Paper sx={{ p: 2, display: 'flex', flexDirection: 'column', mt: '0.5rem' }}>
+            <Title title={title} />
+            {rows != undefined ?
                 <>
-                    <Typography component="h2" variant="h6" color={theme.palette.info.main} gutterBottom>Recent Orders</Typography>
-                    <Table size="small">
+                    <DataGrid
+                        rows={rows}
+                        columns={columns}
+                        getRowId={(row) => row.domain_name}
+                        onRowClick={(row) => console.log(row)}
+                        autoHeight
+                        {...DataGridProps}
+                    />
+                    {/* <Table size="small">
                         <TableHead>
                             <TableRow>
                                 <TableCell>Domain Name</TableCell>
@@ -29,15 +80,12 @@ const Domains = () => {
                                 <DomainRow domainData={domain} key={domain.domain_name.S} />
                             ))}
                         </TableBody>
-                    </Table>
-                    <Link color={theme.palette.info.main} href="#" onClick={(e) => e.preventDefault} sx={{ pt: 3 }}>
-                        See more orders
-                    </Link>
+                    </Table> */}
                 </>
                 :
                 <Typography>Loading ...</Typography>
             }
-        </>
+        </Paper>
     )
 }
 

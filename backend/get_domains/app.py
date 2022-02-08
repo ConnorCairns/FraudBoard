@@ -15,11 +15,18 @@ def res(status, response): return {
 
 
 def handler(event, context):
+    limit = 100
+
+    try:  # improve this lol
+        limit = int(event['queryStringParameters']['limit'])
+    except:
+        pass
+
     dynamo = boto3.client("dynamodb")
 
     response = dynamo.scan(
         TableName=TABLE,
-        Limit=10
+        Limit=limit
     )
 
     try:

@@ -1,6 +1,7 @@
 import { useEffect } from "react"
-import { Box, Toolbar, Container, Paper, Grid } from '@mui/material';
-import Domains from '../components/Domains.js'
+import { Box, Toolbar, Container, Grid } from '@mui/material';
+import Domains from '../components/Domains';
+import AddDomain from '../components/AddDomain';
 
 const Dashboard = () => {
 
@@ -18,9 +19,8 @@ const Dashboard = () => {
             <Toolbar />
             <Container maxWidth="lg" sx={{ mt: 4, mb: 4 }}>
                 <Grid item xs={12}>
-                    <Paper sx={{ p: 2, display: 'flex', flexDirection: 'column' }}>
-                        <Domains />
-                    </Paper>
+                    <AddDomain />
+                    <Domains title="Recently Added Domains" DataGridProps={{ hideFooter: true, disableColumnMenu: true }} />
                 </Grid>
             </Container>
         </Box>

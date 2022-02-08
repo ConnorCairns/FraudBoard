@@ -5,10 +5,14 @@ import { createTheme } from '@mui/material/styles';
 import Dashboard from './pages/Dashboard';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import DomainPage from './pages/DomainPage.js';
+import AllDomains from './pages/AllDomains';
 
 const theme = createTheme({
   palette: {
     mode: 'light',
+    action: {
+      hover: 'rgba(0, 0, 0, 0.06)'
+    }
   }
 })
 
@@ -21,7 +25,9 @@ function App() {
             <Navbar />
             <Routes>
               <Route path="/" element={<Dashboard />} />
-              <Route path="/domain/:domainName" element={<DomainPage />} />
+              <Route path="/domains" element={<AllDomains />}>
+                <Route path="/domains/:domainName" element={<DomainPage />} />
+              </Route>
             </Routes>
           </Router>
         </Box>

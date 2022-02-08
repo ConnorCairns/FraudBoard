@@ -7,13 +7,16 @@ TABLE = "domains"
 DATE_COLS = ["creation_date", "expiration_date", "updated_date"]
 SECONDS_IN_YEAR = 31536000
 
-res = lambda status, response : {
-        "statusCode": status,
-        "headers": {
-            "Content-Type": "application/json"
-        },
-        "body": response
+
+def res(status, response): return {
+    "statusCode": status,
+    "headers": {
+        "Content-Type": "application/json",
+        "Access-Control-Allow-Origin": "*",
+    },
+    "body": response
 }
+
 
 def clean_data(data):
     if isinstance(data["domain_name"], list):
@@ -27,7 +30,8 @@ def clean_data(data):
             else:
                 data[date_col] = str(data[date_col])
 
-    data = {k:v for (k, v) in data.items() if v}
+    data = {k: v for (k, v) in data.items() if v}
+
 
 def get_domain_cost(tld, creation_date, expiration_date):
     route53 = boto3.client("route53domains", region_name="us-east-1")
@@ -48,27 +52,28 @@ def get_domain_cost(tld, creation_date, expiration_date):
 
 
 def handler(event, context):
-    body = json.loads(event["body"])
+    try:  # improve this at some point
+        body = json.loads(event["body"])
 
-    w = whois.whois(body["URL"])
-    orig_creation_date = w.creation_date
-    orig_expiration_date = w.expiration_date
+        w = whois.whois(body["URL"])
+        orig_creation_date = w.creation_date
+        orig_expiration_date = w.expiration_date
 
-    clean_data(w)
+        clean_data(w)
 
-    tld = body["URL"].split(".")[-1]
-    w["domain_cost"] = get_domain_cost(tld, orig_creation_date, orig_expiration_date)
+        tld = body["URL"].split(".")[-1]
+        w["domain_cost"] = get_domain_cost(
+            tld, orig_creation_date, orig_expiration_date)
 
-    dynamo = boto3.resource("dynamodb").Table(TABLE)
-    try:
-        dynamo.put_item(Item=w, ConditionExpression="attribute_not_exists(domain_name)")
-        return res(201, "Successfully added domain")
+        dynamo = boto3.resource("dynamodb").Table(TABLE)
+        try:
+            dynamo.put_item(
+                Item=w, ConditionExpression="attribute_not_exists(domain_name)")
+            return res(201, "Successfully added domain")
+        except Exception as e:
+            if e.__class__.__name__ == "ConditionalCheckFailedException":
+                return res(409, "ConditionalCheckFailedException: Domain already exists")
+
+            return res(500, "Internal server error")
     except Exception as e:
-        if e.__class__.__name__ == "ConditionalCheckFailedException":
-            return res(401, "ConditionalCheckFailedException: Domain already exists")
-        
         return res(500, "Internal server error")
-
-    
-
-

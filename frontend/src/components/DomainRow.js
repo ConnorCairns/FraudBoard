@@ -3,6 +3,7 @@ import { styled } from '@mui/material/styles'
 import { useNavigate } from 'react-router-dom';
 
 const ClickableTableRow = styled(TableRow)(({ theme }) => ({
+    '&:nth-of-type(odd)': { backgroundColor: 'rgba(0, 0, 0, 0.025)' },
     cursor: 'pointer'
 }))
 

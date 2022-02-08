@@ -5,18 +5,15 @@ import MenuIcon from '@material-ui/icons/Menu';
 import { AppBarProps as MuiAppBarProps } from '@mui/material/AppBar';
 import { ChevronLeft } from '@material-ui/icons';
 import DashboardIcon from '@mui/icons-material/Dashboard';
+import TableRowsIcon from '@mui/icons-material/TableRows';
 import { ListItemText } from '@material-ui/core';
 import { useNavigate } from 'react-router-dom';
 
-const drawerWidth: number = 210;
-
-interface AppBarProps extends MuiAppBarProps {
-    open?: boolean;
-}
+const drawerWidth = 210;
 
 const CustomAppBar = styled(AppBar, {
     shouldForwardProp: (prop) => prop !== "open"
-})<AppBarProps>(({ theme, open }) => ({
+})(({ theme, open }) => ({
     zIndex: theme.zIndex.drawer + 1,
     transition: theme.transitions.create(['width', 'margin'], {
         easing: theme.transitions.easing.sharp,
@@ -58,7 +55,7 @@ const CustomDrawer = styled(Drawer, {
     }
 }))
 
-const Navbar = (): JSX.Element => {
+const Navbar = () => {
     const [open, setOpen] = useState(false);
     const navigate = useNavigate()
 
@@ -87,6 +84,12 @@ const Navbar = (): JSX.Element => {
                             <DashboardIcon />
                         </ListItemIcon>
                         <ListItemText primary="Dashboard" />
+                    </ListItemButton>
+                    <ListItemButton key={"All Domains"} onClick={() => navigate("/domains")}>
+                        <ListItemIcon >
+                            <TableRowsIcon />
+                        </ListItemIcon>
+                        <ListItemText primary="All Domains" />
                     </ListItemButton>
                 </List>
             </CustomDrawer >
