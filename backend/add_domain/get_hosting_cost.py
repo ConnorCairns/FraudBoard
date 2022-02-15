@@ -1,7 +1,7 @@
 import re
 from bs4 import BeautifulSoup as bs4
 import requests
-import helper
+from decimal import Decimal
 
 headers = {
     'user-agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/97.0.4692.99 Safari/537.36'
@@ -50,8 +50,7 @@ def get_distance_to_string(regex_string, tag, get_next):
     return dist_to_string
 
 
-def handler(event, context):
-    url = event['queryStringParameters']['url']
+def handler(url):
     page = requests.get(url, headers=headers)
 
     if page.status_code == 200:
@@ -63,7 +62,6 @@ def handler(event, context):
 
         # Strip whitespace
         possible_nums_clean = [item.strip() for item in possible_nums]
-        print(possible_nums_clean)
 
         nums_distance = {}
 
@@ -84,11 +82,9 @@ def handler(event, context):
                 'month': min(distance_month_forward, distance_month_backwards)
             }
 
-        print(nums_distance)
-
         # Sort first by combined distance to strings 'price' and 'month' then secondarily by value of num to get lowest bound
         possible_nums_clean.sort(
-            key=lambda num: (nums_distance[num]['price'] + nums_distance[num]['month'], float(num.split('$')[-1])))
+            key=lambda num: (nums_distance[num]['price'] + nums_distance[num]['month'], Decimal(num.split('$')[-1])))
 
         final_sum = nums_distance[possible_nums_clean[0]]['price'] + \
             nums_distance[possible_nums_clean[0]]['month']
@@ -96,15 +92,11 @@ def handler(event, context):
         if final_sum == STEPS * 2 + 2:
             return 0
         else:
-            return float(possible_nums_clean[0].split('$')[-1])
+            return Decimal(possible_nums_clean[0].split('$')[-1])
 
 
 if __name__ == '__main__':
-    print(handler({"queryStringParameters": {
-          "url": "https://www.hostblast.net/"}}, {}))
-    print(handler({"queryStringParameters": {
-        "url": "https://www.namecheap.com/hosting/"}}, {}))
-    print(handler({"queryStringParameters": {
-          "url": "https://www.interserver.net/"}}, {}))
-    print(handler({"queryStringParameters": {
-          "url": "https://CLOUDFLARE.COM"}}, {}))
+    # handler("https://www.hostblast.net/")
+    # handler("https://www.namecheap.com/hosting/")
+    # handler("https://www.interserver.net/")
+    print(handler("CLOUDFLARE.COM"))

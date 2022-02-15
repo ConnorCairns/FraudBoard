@@ -2,6 +2,7 @@ import whois
 import boto3
 import json
 from decimal import Decimal
+import get_hosting_cost
 
 TABLE = "domains"
 DATE_COLS = ["creation_date", "expiration_date", "updated_date"]
@@ -55,7 +56,7 @@ def handler(event, context):
     try:  # improve this at some point
         body = json.loads(event["body"])
 
-        w = whois.whois(body["URL"])
+        w = whois.whois(body["URL"])  # This call takes a while :(
         orig_creation_date = w.creation_date
         orig_expiration_date = w.expiration_date
 
@@ -65,15 +66,34 @@ def handler(event, context):
         w["domain_cost"] = get_domain_cost(
             tld, orig_creation_date, orig_expiration_date)
 
+        nameserver = w["name_servers"][0] if isinstance(
+            w["name_servers"], list) else w["name_servers"]
+
+        hosting_domain = f"https://{nameserver.split('.')[-2]}.{nameserver.split('.')[-1]}"
+
+        w["hosting_cost"] = get_hosting_cost.handler(hosting_domain)
+
         dynamo = boto3.resource("dynamodb").Table(TABLE)
         try:
             dynamo.put_item(
                 Item=w, ConditionExpression="attribute_not_exists(domain_name)")
             return res(201, "Successfully added domain")
         except Exception as e:
+            print(e)
             if e.__class__.__name__ == "ConditionalCheckFailedException":
                 return res(409, "ConditionalCheckFailedException: Domain already exists")
 
             return res(500, "Internal server error")
     except Exception as e:
+        print(e)
         return res(500, "Internal server error")
+
+
+if __name__ == '__main__':
+    # handler("https://www.hostblast.net/")
+    # handler("https://www.namecheap.com/hosting/")
+    # handler("https://www.interserver.net/")
+    event = {'body': json.dumps({
+        "URL": "prestigeglobalchem.com"})}
+
+    print(handler(event, {}))
