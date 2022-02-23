@@ -14,6 +14,7 @@ const AddDomain = () => {
 
     const handleClick = () => {
         setLoading(true)
+        setOpen(false)
 
         fetch('http://localhost:4000/add-domain', {
             crossDomain: true,

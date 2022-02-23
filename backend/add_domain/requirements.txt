@@ -4,3 +4,4 @@ futures
 beautifulsoup4
 lxml
 requests
+dnspython

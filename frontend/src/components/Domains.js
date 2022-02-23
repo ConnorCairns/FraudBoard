@@ -17,31 +17,44 @@ const formatEmails = (emails) => {
 
 }
 
+// const columns = [
+//     { field: 'domain_name', headerName: 'Domain Name', flex: 1, minWidth: 280 },
+//     { field: 'domain_cost', headerName: 'Domain Cost', flex: 1, minWidth: 100, align: 'right', valueFormatter: ({ value }) => `$${value}` },
+//     { field: 'hosting_cost', headerName: 'Hosting Cost', flex: 1, minWidth: 100, align: 'right', valueFormatter: ({ value }) => `$${value}` },
+//     { field: 'total_spent', headerName: 'Total Spent', flex: 1, minWidth: 100, align: 'right', valueFormatter: ({ value }) => `$${value}` },
+//     { field: 'creation_date', headerName: 'Registration Date', flex: 1, minWidth: 170 },
+//     { field: 'expiration_date', headerName: 'Expiration Date', flex: 1, minWidth: 170 },
+//     { field: 'registrar', headerName: 'Registrar', flex: 1, minWidth: 150, overflow: 'auto' },
+//     { field: 'address', headerName: 'Address', flex: 1, minWidth: 300 },
+//     { field: 'city', headerName: 'City', flex: 1, minWidth: 150 },
+//     { field: 'country', headerName: 'Country', flex: 1, minWidth: 150 },
+//     { field: 'state', headerName: 'State', flex: 1, minWidth: 200 },
+//     { field: 'zipcode', headerName: 'Zipcode', flex: 1, minWidth: 100 },
+//     { field: 'dnssec', headerName: 'dnssec', flex: 1, minWidth: 100 },
+//     {
+//         field: 'emails', headerName: 'Emails', flex: 1, minWidth: 100, valueFormatter: ({ emails }) => {
+//             if (Array.isArray(emails)) {
+//                 console.log(unmarshall(emails))
+//                 return unmarshall(emails)
+//             } else {
+//                 return emails
+//             }
+//         }
+//     },
+//     { field: 'name', headerName: 'Name', flex: 1, minWidth: 100 },
+//     { field: 'name_servers', headerName: 'Name Servers', flex: 1, minWidth: 100 },
+//     { field: 'org', headerName: 'Org', flex: 1, minWidth: 100 },
+
+// ]
+
 const columns = [
-    { field: 'domain_name', headerName: 'Domain Name', flex: 1, minWidth: 280 },
-    { field: 'creation_date', headerName: 'Registration Date', flex: 1, minWidth: 170 },
-    { field: 'expiration_date', headerName: 'Expiration Date', flex: 1, minWidth: 170 },
-    { field: 'registrar', headerName: 'Registrar', flex: 1, minWidth: 150, overflow: 'auto' },
-    { field: 'domain_cost', headerName: 'Amount Spent', flex: 1, minWidth: 100, align: 'right', valueFormatter: ({ value }) => `$${value}` },
-    { field: 'address', headerName: 'Address', flex: 1, minWidth: 300 },
-    { field: 'city', headerName: 'City', flex: 1, minWidth: 150 },
-    { field: 'country', headerName: 'Country', flex: 1, minWidth: 150 },
-    { field: 'state', headerName: 'State', flex: 1, minWidth: 200 },
-    { field: 'zipcode', headerName: 'Zipcode', flex: 1, minWidth: 100 },
-    { field: 'dnssec', headerName: 'dnssec', flex: 1, minWidth: 100 },
-    {
-        field: 'emails', headerName: 'Emails', flex: 1, minWidth: 100, valueFormatter: ({ emails }) => {
-            if (Array.isArray(emails)) {
-                console.log(unmarshall(emails))
-                return unmarshall(emails)
-            } else {
-                return emails
-            }
-        }
-    },
-    { field: 'name', headerName: 'Name', flex: 1, minWidth: 100 },
-    { field: 'name_servers', headerName: 'Name Servers', flex: 1, minWidth: 100 },
-    { field: 'org', headerName: 'Org', flex: 1, minWidth: 100 },
+    { field: 'domain_name', headerName: 'Domain Name', flex: 1, overflow: 'auto' },
+    { field: 'registrar', headerName: 'Registrar', flex: 1, overflow: 'auto' },
+    { field: 'city', headerName: 'City', flex: 1 },
+    { field: 'country', headerName: 'Country', flex: 1 },
+    { field: 'domain_cost', headerName: 'Domain Cost', flex: 1, align: 'right', valueFormatter: ({ value }) => `$${value}` },
+    { field: 'hosting_cost', headerName: 'Hosting Cost', flex: 1, align: 'right', valueFormatter: ({ value }) => `$${value}` },
+    { field: 'total_spent', headerName: 'Total Spent', flex: 1, align: 'right', valueFormatter: ({ value }) => `$${value}` },
 
 ]
 

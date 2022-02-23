@@ -11,12 +11,11 @@ Globals:
     Timeout: 3
 
 Resources:
-  ApiGatewayApi:
-    Type: AWS::Serverless:Api
-    DependsOn: [WhoisFunction, AddDomain, GetTldPrice]
-    Properties:
-      StageName: prod
-      Cors: "'*'"
+  # ApiGatewayApi:
+  #   Type: AWS::Serverless:Api
+  #   DependsOn: [WhoisFunction, AddDomain, GetTldPrice, GetDomains]
+  #   Properties:
+  #     StageName: prod
 
   WhoisFunction:
     Type: AWS::Serverless::Function # More info about Function Resource: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#awsserverlessfunction
@@ -30,8 +29,8 @@ Resources:
           Properties:
             Path: /whois
             Method: get
-            RestApiId:
-              Ref: ApiGatewayApi
+            # RestApiId:
+            #   Ref: ApiGatewayApi
     Metadata:
       Dockerfile: Dockerfile
       DockerContext: ./whois
@@ -53,8 +52,8 @@ Resources:
           Properties:
             Path: /add-domain
             Method: post
-            RestApiId:
-              Ref: ApiGatewayApi
+            # RestApiId:
+            #   Ref: ApiGatewayApi
     Metadata:
       Dockerfile: Dockerfile
       DockerContext: ./add_domain
@@ -75,8 +74,8 @@ Resources:
           Properties:
             Path: /get-tld-price
             Method: get
-            RestApiId:
-              Ref: ApiGatewayApi
+            # RestApiId:
+            #   Ref: ApiGatewayApi
     Metadata:
       Dockerfile: Dockerfile
       DockerContext: ./get_tld_price
@@ -97,8 +96,8 @@ Resources:
           Properties:
             Path: /get-domains
             Method: get
-            RestApiId:
-              Ref: ApiGatewayApi
+            # RestApiId:
+            #   Ref: ApiGatewayApi
     Metadata:
       Dockerfile: Dockerfile
       DockerContext: ./get_domains

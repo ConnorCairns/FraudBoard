@@ -3,7 +3,6 @@ import boto3
 import json
 from decimal import Decimal
 import get_hosting_cost
-
 TABLE = "domains"
 DATE_COLS = ["creation_date", "expiration_date", "updated_date"]
 SECONDS_IN_YEAR = 31536000
@@ -53,6 +52,7 @@ def get_domain_cost(tld, creation_date, expiration_date):
 
 
 def handler(event, context):
+
     try:  # improve this at some point
         body = json.loads(event["body"])
 
@@ -66,12 +66,16 @@ def handler(event, context):
         w["domain_cost"] = get_domain_cost(
             tld, orig_creation_date, orig_expiration_date)
 
+        print(f"nameservers: {w['name_servers']}")
         nameserver = w["name_servers"][0] if isinstance(
             w["name_servers"], list) else w["name_servers"]
+        print(f"nameserver: {nameserver}")
 
-        hosting_domain = f"https://{nameserver.split('.')[-2]}.{nameserver.split('.')[-1]}"
+        nameserver = f"https://{nameserver.split('.')[-2]}.{nameserver.split('.')[-1]}"
 
-        w["hosting_cost"] = get_hosting_cost.handler(hosting_domain)
+        w["hosting_cost"] = get_hosting_cost.handler(nameserver, body["URL"])
+
+        w["total_spent"] = w["domain_cost"] + w["hosting_cost"]
 
         dynamo = boto3.resource("dynamodb").Table(TABLE)
         try:
@@ -94,6 +98,6 @@ if __name__ == '__main__':
     # handler("https://www.namecheap.com/hosting/")
     # handler("https://www.interserver.net/")
     event = {'body': json.dumps({
-        "URL": "prestigeglobalchem.com"})}
+        "URL": "faithstandardpharmacy.com"})}
 
     print(handler(event, {}))
