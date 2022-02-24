@@ -56,7 +56,7 @@ def handler(event, context):
     try:  # improve this at some point
         body = json.loads(event["body"])
 
-        w = whois.whois(body["URL"])  # This call takes a while :(
+        w = whois.whois(body["URL"])  # This call takes a while
         orig_creation_date = w.creation_date
         orig_expiration_date = w.expiration_date
 

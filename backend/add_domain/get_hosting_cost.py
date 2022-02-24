@@ -99,7 +99,7 @@ def get_hosting_cost(soup):
     return Decimal(possible_nums_clean[0].split('$')[-1])
 
 
-def get_host_provider_mx(url):
+def get_cost_provider_mx(url):
     # pythondns needs domain not url, need to strip www etc
     split = f"{url.split('www')[-1]}"
     domain = split[1:] if split[0] == '.' else split
@@ -108,10 +108,13 @@ def get_host_provider_mx(url):
 
     # get ip from mx domain
     ip = socket.gethostbyname(str(mx_domain.exchange)[:-1])
-
     w = whois.whois(ip)
 
-    return f"http://{w['domain_name'][0]}"
+    if w['domain_name']:
+        soup = get_soup(w['domain_name'][0])
+        return get_hosting_cost(soup)
+
+    return 0
 
 # Lots of websites are using namecheap, initial name server may not be namecheap/hosting though
 
@@ -155,9 +158,7 @@ def handler(nameserver, url):
 
             # If not namecheap move onto mx records
             if cost == 0:
-                mx_url = get_host_provider_mx(url)
-                soup = get_soup(mx_url)
-                cost = get_hosting_cost(soup)
+                cost = get_cost_provider_mx(url)
 
                 # Last check for namecheap again with new url
                 if cost == 0:
