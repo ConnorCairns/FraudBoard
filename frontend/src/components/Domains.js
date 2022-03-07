@@ -48,10 +48,10 @@ const formatEmails = (emails) => {
 // ]
 
 const columns = [
-    { field: 'domain_name', headerName: 'Domain Name', flex: 1, overflow: 'auto' },
+    { field: 'domain_name', headerName: 'Domain Name', flex: 1 },
     { field: 'registrar', headerName: 'Registrar', flex: 1, overflow: 'auto' },
-    { field: 'city', headerName: 'City', flex: 1 },
-    { field: 'country', headerName: 'Country', flex: 1 },
+    { field: 'city', headerName: 'City', flex: 0.8 },
+    { field: 'country', headerName: 'Country', flex: 0.5 },
     { field: 'domain_cost', headerName: 'Domain Cost', flex: 1, align: 'right', valueFormatter: ({ value }) => `$${value}` },
     { field: 'hosting_cost', headerName: 'Hosting Cost', flex: 1, align: 'right', valueFormatter: ({ value }) => `$${value}` },
     { field: 'total_spent', headerName: 'Total Spent', flex: 1, align: 'right', valueFormatter: ({ value }) => `$${value}` },
