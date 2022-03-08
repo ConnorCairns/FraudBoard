@@ -6,6 +6,7 @@ import dns
 import dns.resolver
 import socket
 import whois
+import utils
 
 
 headers = {
@@ -110,9 +111,12 @@ def get_cost_provider_mx(url):
     ip = socket.gethostbyname(str(mx_domain.exchange)[:-1])
     w = whois.whois(ip)
 
+
     if w['domain_name']:
-        soup = get_soup(w['domain_name'][0])
-        return get_hosting_cost(soup)
+        soup = utils.get_soup(f"http://{w['domain_name'][0]}")
+
+        if soup != utils.ERROR:
+            return get_hosting_cost(soup)
 
     return 0
 
@@ -124,30 +128,17 @@ def check_namecheap_redirect(soup):
     # Want to look for the redirect link
     for a in soup.find_all('a', href=True):
         if namecheap_regex.match(a['href']) is not None:
-            soup = get_soup("https://www.namecheap.com/hosting/")
-            if soup != 0:
+            soup = utils.get_soup("https://www.namecheap.com/hosting/")
+            if soup != utils.ERROR:
                 return get_hosting_cost(soup)
 
     return 0
 
 
-def get_soup(url):
-    # Try request page and give it to bs4
-    try:
-        page = requests.get(url, headers=headers)
-        if page.status_code == 200:
-            return bs4(page.content, 'lxml', multi_valued_attributes=None)
-        raise ValueError("Page did not respond with 200")
-    # If page errors return 0, can't estimate cost
-    except Exception as e:
-        print(e)
-        return 0
-
-
 def handler(nameserver, url):
-    soup = get_soup(nameserver)
+    soup = utils.get_soup(nameserver)
 
-    if soup != 0:
+    if soup != utils.ERROR:
 
         # Try get hosting cost easily
         cost = get_hosting_cost(soup)

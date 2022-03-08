@@ -24,7 +24,7 @@ def handler(url):
         paid_traffic = res.json()['data']['data'][0]['paid']
         estimated_cost = paid_traffic * FACEBOOK_AVG_CPC
 
-    except Error as e:
+    except Exception as e:
         print(e)
         pass
 

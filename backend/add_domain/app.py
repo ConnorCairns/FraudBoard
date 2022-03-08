@@ -3,6 +3,9 @@ import boto3
 import json
 from decimal import Decimal
 import get_hosting_cost
+import get_ad_cost
+import scrape_text
+
 TABLE = "domains"
 DATE_COLS = ["creation_date", "expiration_date", "updated_date"]
 SECONDS_IN_YEAR = 31536000
@@ -66,16 +69,18 @@ def handler(event, context):
         w["domain_cost"] = get_domain_cost(
             tld, orig_creation_date, orig_expiration_date)
 
-        print(f"nameservers: {w['name_servers']}")
         nameserver = w["name_servers"][0] if isinstance(
             w["name_servers"], list) else w["name_servers"]
-        print(f"nameserver: {nameserver}")
 
         nameserver = f"https://{nameserver.split('.')[-2]}.{nameserver.split('.')[-1]}"
 
         w["hosting_cost"] = get_hosting_cost.handler(nameserver, body["URL"])
 
-        w["total_spent"] = w["domain_cost"] + w["hosting_cost"]
+        w["advertising_spend"] = get_ad_cost.handler(body["URL"])
+
+        w["total_spent"] = w["domain_cost"] + w["hosting_cost"] + w["advertising_spend"]
+
+        w["tokens"] = scrape_text.handler(f"https://{body['URL']}")
 
         dynamo = boto3.resource("dynamodb").Table(TABLE)
         try:
@@ -100,4 +105,7 @@ if __name__ == '__main__':
     event = {'body': json.dumps({
         "URL": "faithstandardpharmacy.com"})}
 
-    print(handler(event, {}))
+    event2 = {'body': json.dumps({
+        "URL": "vland-official.com"})}
+
+    print(handler(event2, {}))
