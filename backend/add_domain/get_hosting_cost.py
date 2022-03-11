@@ -1,6 +1,5 @@
 import re
 from bs4 import BeautifulSoup as bs4
-import requests
 from decimal import Decimal
 import dns
 import dns.resolver
@@ -111,9 +110,11 @@ def get_cost_provider_mx(url):
     ip = socket.gethostbyname(str(mx_domain.exchange)[:-1])
     w = whois.whois(ip)
 
-
     if w['domain_name']:
-        soup = utils.get_soup(f"http://{w['domain_name'][0]}")
+        if isinstance(w['domain_name'], list):
+            soup = utils.get_soup(f"http://{w['domain_name'][0]}")
+        else:
+            soup = utils.get_soup(f"http://{w['domain_name']}")
 
         if soup != utils.ERROR:
             return get_hosting_cost(soup)

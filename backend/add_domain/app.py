@@ -58,7 +58,6 @@ def handler(event, context):
 
     try:  # improve this at some point
         body = json.loads(event["body"])
-
         w = whois.whois(body["URL"])  # This call takes a while
         orig_creation_date = w.creation_date
         orig_expiration_date = w.expiration_date
@@ -72,13 +71,15 @@ def handler(event, context):
         nameserver = w["name_servers"][0] if isinstance(
             w["name_servers"], list) else w["name_servers"]
 
-        nameserver = f"https://{nameserver.split('.')[-2]}.{nameserver.split('.')[-1]}"
+        nameserver = f"http://{nameserver.split('.')[-2]}.{nameserver.split('.')[-1]}"
 
-        w["hosting_cost"] = get_hosting_cost.handler(nameserver, body["URL"])
+        w["hosting_cost"] = Decimal(
+            get_hosting_cost.handler(nameserver, body["URL"]))
 
-        w["advertising_spend"] = get_ad_cost.handler(body["URL"])
+        w["advertising_spend"] = Decimal(get_ad_cost.handler(body["URL"]))
 
-        w["total_spent"] = w["domain_cost"] + w["hosting_cost"] + w["advertising_spend"]
+        w["total_spent"] = Decimal(w["domain_cost"] +
+                                   w["hosting_cost"] + w["advertising_spend"])
 
         w["tokens"] = scrape_text.handler(f"https://{body['URL']}")
 
@@ -102,10 +103,18 @@ if __name__ == '__main__':
     # handler("https://www.hostblast.net/")
     # handler("https://www.namecheap.com/hosting/")
     # handler("https://www.interserver.net/")
-    event = {'body': json.dumps({
-        "URL": "faithstandardpharmacy.com"})}
+    # event = {'body': json.dumps({
+    #     "URL": "jungleboyspacks.com"})}
 
     event2 = {'body': json.dumps({
         "URL": "vland-official.com"})}
 
     print(handler(event2, {}))
+
+    # urls = ["CJKETAMINESTORE.NET", "purechempharma.com", "tomh.uk", "FAITHSTANDARDPHARMACY.COM",
+    #         "megaketaminestore.com", "ketamineforsale.com", "MORRISAPOTEK.COM"]
+    # for url in urls:
+    #     event = {'body': json.dumps({
+    #         "URL": url})}
+
+    #     print(handler(event, {}))
