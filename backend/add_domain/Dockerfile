@@ -6,6 +6,7 @@ COPY get_hosting_cost.py ${LAMBDA_TASK_ROOT}
 COPY utils.py ${LAMBDA_TASK_ROOT}
 COPY get_ad_cost.py ${LAMBDA_TASK_ROOT}
 COPY scrape_text.py ${LAMBDA_TASK_ROOT}
+COPY bart_mnli.py ${LAMBDA_TASK_ROOT}
 
 # Install the function's dependencies using file requirements.txt
 # from your project folder.

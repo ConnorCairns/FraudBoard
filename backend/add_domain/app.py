@@ -5,6 +5,7 @@ from decimal import Decimal
 import get_hosting_cost
 import get_ad_cost
 import scrape_text
+import bart_mnli
 
 TABLE = "domains"
 DATE_COLS = ["creation_date", "expiration_date", "updated_date"]
@@ -82,6 +83,8 @@ def handler(event, context):
                                    w["hosting_cost"] + w["advertising_spend"])
 
         w["tokens"] = scrape_text.handler(f"https://{body['URL']}")
+
+        w["category"] = bart_mnli.handler(w["tokens"])
 
         dynamo = boto3.resource("dynamodb").Table(TABLE)
         try:
