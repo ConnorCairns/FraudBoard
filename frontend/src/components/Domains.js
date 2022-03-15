@@ -1,143 +1,176 @@
 import { useTheme } from '@material-ui/core';
-import { Paper, Typography, Box } from '@mui/material';
+import { Paper, Typography, Box, Popper } from '@mui/material';
 import useFetch from '../hooks/useFetch.js';
 import Title from './Title';
-import { DataGrid, GridToolbar } from '@mui/x-data-grid';
-import { useEffect, useState } from 'react';
-import SettingsPanel from './SettingsPanel.js';
-import { useDemoData } from '@mui/x-data-grid-generator';
+import { DataGrid, GridActionsCellItem } from '@mui/x-data-grid';
+import { useMemo, memo, useEffect, useRef, useState } from 'react';
+import OpenInNewIcon from '@mui/icons-material/OpenInNew';
+import { useNavigate } from 'react-router-dom';
+import { unmarshall } from '../utils/unmarshall'
 
-const formatEmails = (emails) => {
-    if (Array.isArray(emails)) {
-        console.log(unmarshall(emails))
-        return unmarshall(emails)
-    } else {
-        return emails
-    }
-
-}
-
-// const columns = [
-//     { field: 'domain_name', headerName: 'Domain Name', flex: 1, minWidth: 280 },
-//     { field: 'domain_cost', headerName: 'Domain Cost', flex: 1, minWidth: 100, align: 'right', valueFormatter: ({ value }) => `$${value}` },
-//     { field: 'hosting_cost', headerName: 'Hosting Cost', flex: 1, minWidth: 100, align: 'right', valueFormatter: ({ value }) => `$${value}` },
-//     { field: 'total_spent', headerName: 'Total Spent', flex: 1, minWidth: 100, align: 'right', valueFormatter: ({ value }) => `$${value}` },
-//     { field: 'creation_date', headerName: 'Registration Date', flex: 1, minWidth: 170 },
-//     { field: 'expiration_date', headerName: 'Expiration Date', flex: 1, minWidth: 170 },
-//     { field: 'registrar', headerName: 'Registrar', flex: 1, minWidth: 150, overflow: 'auto' },
-//     { field: 'address', headerName: 'Address', flex: 1, minWidth: 300 },
-//     { field: 'city', headerName: 'City', flex: 1, minWidth: 150 },
-//     { field: 'country', headerName: 'Country', flex: 1, minWidth: 150 },
-//     { field: 'state', headerName: 'State', flex: 1, minWidth: 200 },
-//     { field: 'zipcode', headerName: 'Zipcode', flex: 1, minWidth: 100 },
-//     { field: 'dnssec', headerName: 'dnssec', flex: 1, minWidth: 100 },
-//     {
-//         field: 'emails', headerName: 'Emails', flex: 1, minWidth: 100, valueFormatter: ({ emails }) => {
-//             if (Array.isArray(emails)) {
-//                 console.log(unmarshall(emails))
-//                 return unmarshall(emails)
-//             } else {
-//                 return emails
-//             }
-//         }
-//     },
-//     { field: 'name', headerName: 'Name', flex: 1, minWidth: 100 },
-//     { field: 'name_servers', headerName: 'Name Servers', flex: 1, minWidth: 100 },
-//     { field: 'org', headerName: 'Org', flex: 1, minWidth: 100 },
-
-// ]
-
-const columns = [
-    { field: 'domain_name', headerName: 'Domain Name', flex: 1 },
-    { field: 'registrar', headerName: 'Registrar', flex: 1, overflow: 'auto' },
-    { field: 'city', headerName: 'City', flex: 0.8 },
-    { field: 'country', headerName: 'Country', flex: 0.5 },
-    { field: 'domain_cost', headerName: 'Domain Cost', flex: 1, align: 'right', valueFormatter: ({ value }) => `$${value}` },
-    { field: 'hosting_cost', headerName: 'Hosting Cost', flex: 1, align: 'right', valueFormatter: ({ value }) => `$${value}` },
-    { field: 'total_spent', headerName: 'Total Spent', flex: 1, align: 'right', valueFormatter: ({ value }) => `$${value}` },
-
-]
-
-const unmarshall = (output) => {
-    return output.map((item => {
-        let newObj = {}
-
-        for (var key in item) {
-            newObj[key] = Object.values(item[key])[0]
+function isOverflown(element) {
+    return (
+      element.scrollHeight > element.clientHeight ||
+      element.scrollWidth > element.clientWidth
+    );
+  }
+  
+  const GridCellExpand = memo(function GridCellExpand(props) {
+    const { width, value } = props;
+    const wrapper = useRef(null);
+    const cellDiv = useRef(null);
+    const cellValue = useRef(null);
+    const [anchorEl, setAnchorEl] = useState(null);
+    const [showFullCell, setShowFullCell] = useState(false);
+    const [showPopper, setShowPopper] = useState(false);
+  
+    const handleMouseEnter = () => {
+      const isCurrentlyOverflown = isOverflown(cellValue.current);
+      setShowPopper(isCurrentlyOverflown);
+      setAnchorEl(cellDiv.current);
+      setShowFullCell(true);
+    };
+  
+    const handleMouseLeave = () => {
+      setShowFullCell(false);
+    };
+  
+    useEffect(() => {
+      if (!showFullCell) {
+        return undefined;
+      }
+  
+      function handleKeyDown(nativeEvent) {
+        // IE11, Edge (prior to using Bink?) use 'Esc'
+        if (nativeEvent.key === 'Escape' || nativeEvent.key === 'Esc') {
+          setShowFullCell(false);
         }
+      }
+  
+      document.addEventListener('keydown', handleKeyDown);
+  
+      return () => {
+        document.removeEventListener('keydown', handleKeyDown);
+      };
+    }, [setShowFullCell, showFullCell]);
+  
+    return (
+      <Box
+        ref={wrapper}
+        onMouseEnter={handleMouseEnter}
+        onMouseLeave={handleMouseLeave}
+        sx={{
+          alignItems: 'center',
+          lineHeight: '24px',
+          width: 1,
+          height: 1,
+          position: 'relative',
+          display: 'flex',
+        }}
+      >
+        <Box
+          ref={cellDiv}
+          sx={{
+            height: 1,
+            width,
+            display: 'block',
+            position: 'absolute',
+            top: 0,
+          }}
+        />
+        <Box
+          ref={cellValue}
+          sx={{ whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}
+        >
+          {value !== true && value}
+        </Box>
+        {showPopper && (
+          <Popper
+            open={showFullCell && anchorEl !== null}
+            anchorEl={anchorEl}
+            style={{ width, marginLeft: -17 }}
+          >
+            <Paper
+              elevation={1}
+              style={{ minHeight: wrapper.current.offsetHeight - 3 }}
+            >
+              <Typography variant="body2" style={{ padding: 8 }}>
+                {value}
+              </Typography>
+            </Paper>
+          </Popper>
+        )}
+      </Box>
+    );
+  });
+  
+  function renderCellExpand(params) {
+    return (
+      <GridCellExpand value={params.value || ''} width={params.colDef.computedWidth} />
+    );
+  }
 
-        return newObj
-
-    }))
+const initialState = {
+    "columns": {
+        "columnVisibilityModel": {
+            "creation_date": false,
+            "expiration_date": false,
+            "registrar": false,
+            "address": false,
+            "city": false,
+            "country": false,
+            "state": false,
+            "zipcode": false,
+            "dnssec": false,
+            "emails": false,
+            "name": false,
+            "name_servers": false,
+            "org": false,
+        }
+    }
 }
 
 const Domains = ({ title = "Domains", DataGridProps, reqLimit = 5 }) => {
     const URL = `http://localhost:4000/get-domains?limit=${reqLimit}`
     const [status, domains] = useFetch(URL)
     const [rows, setRows] = useState();
+    const navigate = useNavigate();
 
-    // const [type, setType] = useState('Commodity');
-    // const [size, setSize] = useState(100);
-
-    // const { loading, data, setRowLength, loadNewData } = useDemoData({
-    //     dataSet: type,
-    //     rowLength: size,
-    //     maxColumns: 40,
-    //     editable: true,
-    // });
-
-    // const [pagination, setPagination] = useState({
-    //     pagination: false,
-    //     autoPageSize: false,
-    //     pageSize: undefined,
-    // });
-    // const handleApplyClick = (settings) => {
-    //     if (size !== settings.size) {
-    //         setSize(settings.size);
-    //     }
-
-    //     if (type !== settings.type) {
-    //         setType(settings.type);
-    //     }
-
-    //     if (size !== settings.size || type !== settings.type) {
-    //         setRowLength(settings.size);
-    //         loadNewData();
-    //     }
-
-    //     const newPaginationSettings = {
-    //         pagination: settings.pagesize !== -1,
-    //         autoPageSize: settings.pagesize === 0,
-    //         pageSize: settings.pagesize > 0 ? settings.pagesize : undefined,
-    //     };
-
-    //     setPagination((currentPaginationSettings) => {
-    //         if (
-    //             currentPaginationSettings.pagination === newPaginationSettings.pagination &&
-    //             currentPaginationSettings.autoPageSize ===
-    //             newPaginationSettings.autoPageSize &&
-    //             currentPaginationSettings.pageSize === newPaginationSettings.pageSize
-    //         ) {
-    //             return currentPaginationSettings;
-    //         }
-    //         return newPaginationSettings;
-    //     });
-    // };
+    const columns = [
+        { field: 'domain_name', headerName: 'Domain Name', flex: 1, minWidth: 280, renderCell: renderCellExpand},
+        { field: 'category', headerName: 'Category', flex: 1, align: 'center', minWidth: 100, renderCell: renderCellExpand},
+        { field: 'domain_cost', type: 'number', headerName: 'Domain Cost', flex: 0.6, align: 'right', minWidth: 100, valueFormatter: ({ value }) => `$${parseFloat(value).toFixed(2)}` },
+        { field: 'hosting_cost', type: 'number', headerName: 'Hosting Cost', flex: 0.6, align: 'right', minWidth: 100, valueFormatter: ({ value }) => `$${parseFloat(value).toFixed(2)}` },
+        { field: 'advertising_spend', type: 'number', headerName: 'Advertising Cost', flex: 0.8, align: 'right', minWidth: 130, valueFormatter: ({ value }) => `$${parseFloat(value).toFixed(2)}` },
+        { field: 'total_spent', type: 'number', headerName: 'Total Spent', flex: 0.6, align: 'right', minWidth: 100, valueFormatter: ({ value }) => `$${parseFloat(value).toFixed(2)}` },
+        { field: 'creation_date', headerName: 'Registration Date', flex: 1, minWidth: 170, renderCell: renderCellExpand},
+        { field: 'expiration_date', headerName: 'Expiration Date', flex: 1, minWidth: 170, renderCell: renderCellExpand},
+        { field: 'registrar', headerName: 'Registrar', flex: 1, minWidth: 150, overflow: 'auto', renderCell: renderCellExpand},
+        { field: 'address', headerName: 'Address', flex: 1, minWidth: 300, renderCell: renderCellExpand},
+        { field: 'city', headerName: 'City', flex: 1, minWidth: 150, renderCell: renderCellExpand},
+        { field: 'country', headerName: 'Country', flex: 1, minWidth: 150, renderCell: renderCellExpand},
+        { field: 'state', headerName: 'State', flex: 1, minWidth: 200, renderCell: renderCellExpand},
+        { field: 'zipcode', headerName: 'Zipcode', flex: 1, minWidth: 100, renderCell: renderCellExpand},
+        { field: 'name', headerName: 'Name', flex: 1, minWidth: 200, renderCell: renderCellExpand},
+        { field: 'org', headerName: 'Org', flex: 1, minWidth: 200, renderCell: renderCellExpand},
+        {
+            field: 'actions',
+            type: 'actions',
+            width: 80,
+            getActions: (params) => [
+              <GridActionsCellItem
+                icon={<OpenInNewIcon />}
+                label="Delete"
+                onClick={() => navigate(`/domains/${params.id}`)}
+              />,
+            ],
+          },
+    ]
 
     useEffect(() => {
         if (status === 'fetched') {
-            let test = unmarshall(domains)
-            console.log(test)
-            let rows = domains.map((domain) => {
-                return {
-                    'domainName': domain.domain_name.S,
-                    'registrationDate': domain.creation_date.S,
-                    'expirationDate': domain.expiration_date.S,
-                    'registar': domain.registrar.S,
-                    'amount': `$${domain.domain_cost.N}`,
-                }
-            })
-            setRows(test)
+            let rows = unmarshall(domains)
+            setRows(rows)
         }
 
     }, [status, domains])
@@ -147,45 +180,20 @@ const Domains = ({ title = "Domains", DataGridProps, reqLimit = 5 }) => {
     return (
         <Paper sx={{ p: 2, display: 'flex', flexDirection: 'column', mt: '0.5rem' }}>
             <Title title={title} />
-            {rows != undefined ?
+            {rows !== undefined ?
                 <>
-                    {/* <Box sx={{
-                        display: 'flex', flexDirection: 'column', width: '100%', height: 600, '& .MuiFormGroup-options': {
-                            alignItems: 'center',
-                            paddingBottom: theme.spacing(0.1),
-                            '& > div': {
-                                minWidth: 100,
-                                margin: theme.spacing(0.1),
-                                marginLeft: 0,
-                            }
-                        }
-                    }}>
-                        <SettingsPanel onApply={handleApplyClick}
-                            size={size}
-                            type={type} /> */}
                     <DataGrid
-                        // {...data}
-                        // components={{
-                        //     Toolbar: GridToolbar,
-                        // }}
-                        // loading={loading}
-                        // checkboxSelection
-                        // disableSelectionOnClick
-                        // rowThreshold={0}
-                        // initialState={{
-                        //     ...data.initialState,
-                        //     pinnedColumns: { left: ['__check__', 'desk'] },
-                        // }}
-                        // {...pagination}
                         rows={rows}
                         columns={columns}
                         getRowId={(row) => row.domain_name}
                         onRowClick={(row) => console.log(row)}
                         autoHeight
                         rowsPerPageOptions={[5, 10, 100]}
+                        initialState={{
+                            ...initialState,
+                        }}
                         {...DataGridProps}
                     />
-                    {/* </Box> */}
                 </>
                 :
                 <Typography>Loading ...</Typography>

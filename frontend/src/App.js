@@ -25,9 +25,8 @@ function App() {
             <Navbar />
             <Routes>
               <Route path="/" element={<Dashboard />} />
-              <Route path="/domains" element={<AllDomains />}>
-                <Route path="/domains/:domainName" element={<DomainPage />} />
-              </Route>
+              <Route path="/domains" element={<AllDomains />} />
+              <Route path="/domains/:domainName" element={<DomainPage />} />
             </Routes>
           </Router>
         </Box>

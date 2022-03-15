@@ -91,7 +91,7 @@ Resources:
       Policies:
         - AmazonDynamoDBFullAccess
       Events:
-        TLDPriceAPI:
+        GetDomainsAPI:
           Type: Api # More info about API Event Source: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#api
           Properties:
             Path: /get-domains
@@ -101,6 +101,28 @@ Resources:
     Metadata:
       Dockerfile: Dockerfile
       DockerContext: ./get_domains
+      DockerTag: python3.9-v1
+
+  GetDomain:
+    Type: AWS::Serverless::Function # More info about Function Resource: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#awsserverlessfunction
+    Properties:
+      PackageType: Image
+      Architectures:
+        - x86_64
+      Timeout: 10
+      Policies:
+        - AmazonDynamoDBFullAccess
+      Events:
+        GetDomainAPI:
+          Type: Api # More info about API Event Source: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#api
+          Properties:
+            Path: /get_domain
+            Method: get
+            # RestApiId:
+            #   Ref: ApiGatewayApi
+    Metadata:
+      Dockerfile: Dockerfile
+      DockerContext: ./get_domain
       DockerTag: python3.9-v1
 
 Outputs:
@@ -140,3 +162,12 @@ Outputs:
   GetDomainsIamRole:
     Description: "Implicit IAM Role created for Multiply function"
     Value: !GetAtt GetDomainsRole.Arn
+  GetDomainAPI:
+    Description: "API Gateway endpoint URL for Prod stage for getTLDPrice function"
+    Value: !Sub "https://${ServerlessRestApi}.execute-api.${AWS::Region}.amazonaws.com/Prod/get-domain/"
+  GetDomain:
+    Description: "getTldPrice Lambda Function ARN"
+    Value: !GetAtt GetDomain.Arn
+  GetDomainIamRole:
+    Description: "Implicit IAM Role created for Multiply function"
+    Value: !GetAtt GetDomainRole.Arn
