@@ -6,8 +6,11 @@ import get_hosting_cost
 import get_ad_cost
 import scrape_text
 import bart_mnli
+from boto3.dynamodb.conditions import Key
+import time
 
 TABLE = "domains"
+COSTS_TABLE = "category_costs"
 DATE_COLS = ["creation_date", "expiration_date", "updated_date"]
 SECONDS_IN_YEAR = 31536000
 
@@ -79,17 +82,36 @@ def handler(event, context):
 
         w["advertising_spend"] = Decimal(get_ad_cost.handler(body["URL"]))
 
-        w["total_spent"] = Decimal(w["domain_cost"] +
-                                   w["hosting_cost"] + w["advertising_spend"])
+        total_spent = w["domain_cost"] + \
+            w["hosting_cost"] + w["advertising_spend"]
+        w["total_spent"] = Decimal(total_spent)
 
         w["tokens"] = scrape_text.handler(f"https://{body['URL']}")
 
         w["category"] = bart_mnli.handler(w["tokens"])
 
         dynamo = boto3.resource("dynamodb").Table(TABLE)
+        dynamo_cost = boto3.resource("dynamodb").Table(COSTS_TABLE)
+
+        res = dynamo_cost.query(KeyConditionExpression=Key(
+            "category").eq(w["category"]), Limit=1, ScanIndexForward=False)
+
+        cost = 0 if len(res['Items']) == 0 else res['Items'][0]['average_cost']
+
+        count = 1 if len(res['Items']) == 0 else res['Items'][0]['count'] + 1
+
+        new_cost = Decimal(cost + ((total_spent - cost) / count))
+
+        cost_item = {"category": w["category"], "timeDate": int(
+            time.time()), "average_cost": new_cost, "count": count}
+
         try:
             dynamo.put_item(
                 Item=w, ConditionExpression="attribute_not_exists(domain_name)")
+
+            dynamo_cost.put_item(
+                Item=cost_item
+            )
             return res(201, "Successfully added domain")
         except Exception as e:
             print(e)

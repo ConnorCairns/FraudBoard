@@ -13,6 +13,9 @@ const theme = createTheme({
     action: {
       hover: 'rgba(0, 0, 0, 0.06)'
     }
+  },
+  typography: {
+    fontFamily: '"Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji"',
   }
 })
 

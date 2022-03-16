@@ -34,13 +34,13 @@ const DomainPage = () => {
                 overflow: 'auto',
             }}>
             <Toolbar />
-            <Container maxWidth="lg" sx={{ mt: 4, mb: 4 }}>
+            <Container maxWidth="false" sx={{ mt: 4, mb: 4 }}>
                 <Typography component="h1" variant="h4" color={theme.palette.info.main} gutterBottom>{params.domainName}</Typography>
                 {
                     data ?
                         <Grid container spacing={2}>
-                            <Grid item xs={3}>
-                                <TotalCost cost={data.total_spent} />
+                            <Grid item xs={4}>
+                                <TotalCost cost={data.total_spent} domainCost={data.domain_cost} hostingCost={data.hosting_cost} adCost={data.advertising_spend} />
                             </Grid>
                         </Grid>
                         :
