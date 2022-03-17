@@ -1,8 +1,8 @@
 import utils
 import nltk
 
-nltk.download('punkt')
-nltk.download('stopwords')
+# nltk.download('punkt')
+# nltk.download('stopwords')
 
 stemmer = nltk.stem.SnowballStemmer("english")
 

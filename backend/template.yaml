@@ -42,7 +42,7 @@ Resources:
       PackageType: Image
       Architectures:
         - x86_64
-      Timeout: 30
+      Timeout: 60
       Policies:
         - AmazonDynamoDBFullAccess
         - AmazonRoute53DomainsReadOnlyAccess
@@ -125,6 +125,28 @@ Resources:
       DockerContext: ./get_domain
       DockerTag: python3.9-v1
 
+  GetCategoryCost:
+    Type: AWS::Serverless::Function # More info about Function Resource: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#awsserverlessfunction
+    Properties:
+      PackageType: Image
+      Architectures:
+        - x86_64
+      Timeout: 10
+      Policies:
+        - AmazonDynamoDBFullAccess
+      Events:
+        GetCategoryCostAPI:
+          Type: Api # More info about API Event Source: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#api
+          Properties:
+            Path: /get_category_cost
+            Method: get
+            # RestApiId:
+            #   Ref: ApiGatewayApi
+    Metadata:
+      Dockerfile: Dockerfile
+      DockerContext: ./get_avg_category_cost
+      DockerTag: python3.9-v1
+
 Outputs:
   WhoIsApi:
     Description: "API Gateway endpoint URL for Prod stage for WhoIs function"
@@ -171,3 +193,12 @@ Outputs:
   GetDomainIamRole:
     Description: "Implicit IAM Role created for Multiply function"
     Value: !GetAtt GetDomainRole.Arn
+  GetCategoryCostAPI:
+    Description: "API Gateway endpoint URL for Prod stage for getTLDPrice function"
+    Value: !Sub "https://${ServerlessRestApi}.execute-api.${AWS::Region}.amazonaws.com/Prod/get-category-cost/"
+  GetCategoryCost:
+    Description: "getTldPrice Lambda Function ARN"
+    Value: !GetAtt GetCategoryCost.Arn
+  GetCategoryCostIamRole:
+    Description: "Implicit IAM Role created for Multiply function"
+    Value: !GetAtt GetCategoryCostRole.Arn

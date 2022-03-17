@@ -93,12 +93,12 @@ def handler(event, context):
         dynamo = boto3.resource("dynamodb").Table(TABLE)
         dynamo_cost = boto3.resource("dynamodb").Table(COSTS_TABLE)
 
-        res = dynamo_cost.query(KeyConditionExpression=Key(
+        response = dynamo_cost.query(KeyConditionExpression=Key(
             "category").eq(w["category"]), Limit=1, ScanIndexForward=False)
 
-        cost = 0 if len(res['Items']) == 0 else res['Items'][0]['average_cost']
+        cost = 0 if len(response['Items']) == 0 else response['Items'][0]['average_cost']
 
-        count = 1 if len(res['Items']) == 0 else res['Items'][0]['count'] + 1
+        count = 1 if len(response['Items']) == 0 else response['Items'][0]['count'] + 1
 
         new_cost = Decimal(cost + ((total_spent - cost) / count))
 
@@ -112,6 +112,7 @@ def handler(event, context):
             dynamo_cost.put_item(
                 Item=cost_item
             )
+
             return res(201, "Successfully added domain")
         except Exception as e:
             print(e)

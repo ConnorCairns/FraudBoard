@@ -1,4 +1,5 @@
 import { Paper, TableCell, TableHead, TableContainer, Table, TableBody, TableRow } from '@mui/material';
+import { useReducerContext } from "../../services/ReducerProvider";
 
 const headCells = [
     {
@@ -20,17 +21,20 @@ const headCells = [
 ]
 
 
-const CostTable = ({ cost, domainCost, hostingCost, adCost }) => {
+const CostTable = () => {
+    const [state,] = useReducerContext()
 
     return (
         <TableContainer component={Paper}>
             <Table>
                 <TableHead>
-                    {headCells.map((headCell) => (
-                        <TableCell key={headCell.id} align={headCell.numeric ? 'right' : 'left'} sx={{ fontWeight: 700 }}>
-                            {headCell.label}
-                        </TableCell>
-                    ))}
+                    <TableRow key='head'>
+                        {headCells.map((headCell) => (
+                            <TableCell key={headCell.id} align={headCell.numeric ? 'right' : 'left'} sx={{ fontWeight: 700 }}>
+                                {headCell.label}
+                            </TableCell>
+                        ))}
+                    </TableRow>
                 </TableHead>
                 <TableBody>
                     <TableRow key='domainCost'>
@@ -38,10 +42,10 @@ const CostTable = ({ cost, domainCost, hostingCost, adCost }) => {
                             Domain
                         </TableCell>
                         <TableCell align='right' sx={{ fontWeight: 600 }}>
-                            {domainCost}
+                            {state.currDomain.domain_cost}
                         </TableCell>
                         <TableCell align='right' sx={{ fontWeight: 600 }}>
-                            {`${((domainCost / cost) * 100).toFixed(2)}`}
+                            {`${((state.currDomain.domain_cost / state.currDomain.total_spent) * 100).toFixed(2)}`}
                         </TableCell>
                     </TableRow>
                     <TableRow key='hostingCost'>
@@ -49,10 +53,10 @@ const CostTable = ({ cost, domainCost, hostingCost, adCost }) => {
                             Hosting
                         </TableCell>
                         <TableCell align='right' sx={{ fontWeight: 600 }}>
-                            {hostingCost}
+                            {state.currDomain.hosting_cost}
                         </TableCell>
                         <TableCell align='right' sx={{ fontWeight: 600 }}>
-                            {`${((hostingCost / cost) * 100).toFixed(2)}`}
+                            {`${((state.currDomain.hosting_cost / state.currDomain.total_spent) * 100).toFixed(2)}`}
                         </TableCell>
                     </TableRow>
                     <TableRow key='adCost'>
@@ -60,10 +64,10 @@ const CostTable = ({ cost, domainCost, hostingCost, adCost }) => {
                             Advertising
                         </TableCell>
                         <TableCell align='right' sx={{ fontWeight: 600 }}>
-                            {adCost}
+                            {state.currDomain.advertising_spend}
                         </TableCell>
                         <TableCell align='right' sx={{ fontWeight: 600 }}>
-                            {`${((adCost / cost) * 100).toFixed(2)}`}
+                            {`${((state.currDomain.advertising_spend / state.currDomain.total_spent) * 100).toFixed(2)}`}
                         </TableCell>
                     </TableRow>
                 </TableBody>

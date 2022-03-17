@@ -8,8 +8,8 @@ import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import IconButton from '@mui/material/IconButton';
 import { useState } from "react";
 import CostTable from './CostTable';
+import { useReducerContext } from "../../services/ReducerProvider";
 
-const AVG = 23
 const ExpandMore = styled((props) => {
     const { expand, ...other } = props;
     return <IconButton {...other} />;
@@ -21,11 +21,10 @@ const ExpandMore = styled((props) => {
     }),
 }));
 
-const TotalCost = ({ cost, domainCost, hostingCost, adCost }) => {
+const TotalCost = () => {
+    const [state,] = useReducerContext()
     const [expanded, setExpanded] = useState(false)
     const theme = useTheme()
-
-    console.log(cost)
 
     return (
         <Card sx={{ height: '100%' }}>
@@ -36,12 +35,12 @@ const TotalCost = ({ cost, domainCost, hostingCost, adCost }) => {
                             TOTAL SPENT
                         </Typography>
                         <Typography color="textPrimary" variant="h4" sx={{ fontWeight: 700 }}>
-                            ${cost}
+                            ${state.currDomain.total_spent}
                         </Typography>
                     </Box>
                     <Avatar
                         sx={{
-                            backgroundColor: cost < AVG ? theme.palette.error.main : theme.palette.success.main,
+                            backgroundColor: state.currDomain.total_spent < state.currCategory.average_cost ? theme.palette.error.main : theme.palette.success.main,
                             height: 56,
                             width: 56,
                             ml: 'auto'
@@ -52,25 +51,25 @@ const TotalCost = ({ cost, domainCost, hostingCost, adCost }) => {
                 </Box>
                 <Box sx={{ pt: 1, display: 'flex', alignItems: 'center' }}>
                     {
-                        cost < AVG ?
+                        state.currDomain.total_spent < state.currCategory.average_cost ?
                             <>
                                 <Box sx={{ mr: 1, display: 'flex' }}>
                                     <ArrowDownwardIcon sx={{ color: theme.palette.error.main }} />
                                     <Typography sx={{ color: theme.palette.error.main }}>
-                                        {((AVG - cost) / AVG * 100).toFixed(2)}%
+                                        {((state.currCategory.average_cost - state.currDomain.total_spent) / state.currCategory.average_cost * 100).toFixed(2)}%
                                     </Typography>
                                 </Box>
-                                <Typography color="textSecondary">below average</Typography>
+                                <Typography color="textSecondary" variant="caption">below category average</Typography>
                             </>
                             :
                             <>
                                 <Box sx={{ mr: 1, display: 'flex' }}>
                                     <ArrowUpwardIcon sx={{ color: theme.palette.success.main }} />
                                     <Typography sx={{ color: theme.palette.success.main }}>
-                                        {((cost - AVG) / AVG * 100).toFixed(2)}%
+                                        {((state.currDomain.total_spent - state.currCategory.average_cost) / state.currCategory.average_cost * 100).toFixed(2)}%
                                     </Typography>
                                 </Box>
-                                <Typography color="textSecondary">above average</Typography>
+                                <Typography color="textSecondary" variant="caption">above category average</Typography>
                             </>
                     }
                 </Box>
@@ -83,7 +82,7 @@ const TotalCost = ({ cost, domainCost, hostingCost, adCost }) => {
             <Collapse in={expanded} timeout="auto" unmountOnExit>
                 <Divider />
                 <CardContent>
-                    <CostTable cost={cost} domainCost={domainCost} hostingCost={hostingCost} adCost={adCost} />
+                    <CostTable />
                 </CardContent>
             </Collapse>
         </Card >
