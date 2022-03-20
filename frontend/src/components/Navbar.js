@@ -1,13 +1,20 @@
 import React, { useState } from 'react';
 import { styled } from '@mui/material/styles';
-import { AppBar, Divider, Drawer, IconButton, ListItemButton, Toolbar, Typography, List, ListItemIcon, Box, Container, Grid, Paper, CssBaseline } from '@mui/material';
+import { AppBar, Divider, Drawer, IconButton, ListItemButton, Toolbar, Typography, List, ListItemIcon } from '@mui/material';
 import MenuIcon from '@material-ui/icons/Menu';
-import { AppBarProps as MuiAppBarProps } from '@mui/material/AppBar';
 import { ChevronLeft } from '@material-ui/icons';
 import DashboardIcon from '@mui/icons-material/Dashboard';
 import TableRowsIcon from '@mui/icons-material/TableRows';
 import { ListItemText } from '@material-ui/core';
 import { useNavigate } from 'react-router-dom';
+import { useReducerContext } from '../services/ReducerProvider';
+import LooksOneIcon from '@mui/icons-material/LooksOne';
+import LooksTwoIcon from '@mui/icons-material/LooksTwo';
+import Looks3Icon from '@mui/icons-material/Looks3';
+import Looks4Icon from '@mui/icons-material/Looks4';
+import Looks5Icon from '@mui/icons-material/Looks5';
+
+const numberIcons = [<LooksOneIcon />, <LooksTwoIcon />, <Looks3Icon />, <Looks4Icon />, <Looks5Icon />]
 
 const drawerWidth = 210;
 
@@ -58,6 +65,7 @@ const CustomDrawer = styled(Drawer, {
 const Navbar = () => {
     const [open, setOpen] = useState(false);
     const navigate = useNavigate()
+    const [state,] = useReducerContext();
 
     return (
         <>
@@ -91,6 +99,15 @@ const Navbar = () => {
                         </ListItemIcon>
                         <ListItemText primary="All Domains" />
                     </ListItemButton>
+                    <Divider />
+                    {state.prevDomains.map((prevDomain, idx) =>
+                        <ListItemButton key={prevDomain} onClick={() => navigate(`/domains/${prevDomain}`)}>
+                            <ListItemIcon >
+                                {numberIcons[idx]}
+                            </ListItemIcon>
+                            <ListItemText disableTypography primary={<Typography type="subtitle1" sx={{ fontSize: '0.5rem' }}>{prevDomain}</Typography>} />
+                        </ListItemButton>
+                    )}
                 </List>
             </CustomDrawer >
         </>

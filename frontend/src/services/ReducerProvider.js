@@ -9,7 +9,7 @@ export const ReducerProvider = ({ children, initialState, reducer }) => {
 
     return (
         <ReducerContext.Provider value={[state, dispatch]}>
-            { children }
+            {children}
         </ReducerContext.Provider>
     )
 }

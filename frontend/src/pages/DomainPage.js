@@ -4,15 +4,14 @@ import { useTheme } from '@material-ui/core';
 import TotalCost from '../components/domainGridComponents/TotalCost';
 import useFetch from '../hooks/useFetch';
 import { useEffect, useState } from 'react';
-import { unmarshall } from '../utils/unmarshall';
 import { useReducerContext } from '../services/ReducerProvider';
 import CategoryCard from '../components/domainGridComponents/CategoryCard';
+import CostLineGraph from '../components/domainGridComponents/CostLineGraph';
 
 const DomainPage = () => {
     const params = useParams()
     const theme = useTheme()
-    const [status, res] = useFetch(`http://localhost:4000/get_domain?key=${params.domainName}`)
-    const [data, setData] = useState();
+    const [status, res] = useFetch(`http://localhost:4000/get_domain_data?domain=${params.domainName}`)
     const [, dispatch] = useReducerContext()
     const [loading, setLoading] = useState(true)
 
@@ -22,16 +21,10 @@ const DomainPage = () => {
 
     useEffect(() => {
         if (status === 'fetched') {
-            let unmarshalledData = unmarshall([res])
-            setData(unmarshalledData[0])
-            dispatch({ type: 'updateCurrDomain', payload: unmarshalledData[0] })
-
-            fetch(`http://localhost:4000/get_category_cost?category=${unmarshalledData[0].category}`)
-                .then(response => response.json())
-                .then(data => {
-                    dispatch({ type: 'updateCurrCategory', payload: data[0] })
-                    setLoading(false)
-                })
+            dispatch({ type: 'updateCurrDomain', payload: res.domain_data })
+            dispatch({ type: 'updateCurrCategory', payload: res.category_data })
+            dispatch({ type: 'updateAllCategory', payload: res.overall_data })
+            setLoading(false)
         }
 
 
@@ -56,11 +49,14 @@ const DomainPage = () => {
                         <Typography>Loading ...</Typography>
                         :
                         <Grid container spacing={2}>
-                            <Grid item xs={4}>
+                            <Grid item xs={12} sm={12} lg={4}>
                                 <TotalCost />
                             </Grid>
-                            <Grid item xs={8} sx={{height: '50%'}}>
+                            <Grid item xs={12} sm={12} lg={8}>
                                 <CategoryCard />
+                            </Grid>
+                            <Grid item xs={12}>
+                                <CostLineGraph />
                             </Grid>
                         </Grid>
                 }

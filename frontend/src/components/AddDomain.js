@@ -1,4 +1,4 @@
-import { Paper, TextField, Box, Alert } from "@mui/material";
+import { Paper, TextField, Box } from "@mui/material";
 import { LoadingButton } from '@mui/lab';
 import Title from './Title';
 import { useState } from "react";
@@ -29,7 +29,7 @@ const AddDomain = () => {
                     setURL("")
                     setOpen(true)
                     setLoading(false)
-                } else if (response.status == 409) {
+                } else if (response.status === 409) {
                     setURL("")
                     setOpenInfo(true)
                     setLoading(false)

@@ -6,6 +6,8 @@ import Dashboard from './pages/Dashboard';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import DomainPage from './pages/DomainPage.js';
 import AllDomains from './pages/AllDomains';
+import { useEffect } from 'react';
+import { useReducerContext } from './services/ReducerProvider';
 
 const theme = createTheme({
   palette: {
@@ -20,6 +22,14 @@ const theme = createTheme({
 })
 
 function App() {
+  const [, dispatch] = useReducerContext();
+  useEffect(() => {
+    const savedPrevDomains = localStorage.getItem("prevDomains")
+    if (savedPrevDomains != null) {
+      dispatch({ type: 'loadPrevDomains', payload: JSON.parse(savedPrevDomains) })
+    }
+  }, [])
+
   return (
     <ThemeProvider theme={theme}>
       <CssBaseline>

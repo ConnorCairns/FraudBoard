@@ -27,7 +27,7 @@ const TotalCost = () => {
     const theme = useTheme()
 
     return (
-        <Card sx={{ height: '100%' }}>
+        <Card sx={{ height: 'min-content' }}>
             <CardContent sx={{ pb: 0 }}>
                 <Box sx={{ display: 'flex' }}>
                     <Box sx={{ display: 'flex', flexDirection: 'column' }}>
@@ -40,7 +40,7 @@ const TotalCost = () => {
                     </Box>
                     <Avatar
                         sx={{
-                            backgroundColor: state.currDomain.total_spent < state.currCategory.average_cost ? theme.palette.error.main : theme.palette.success.main,
+                            backgroundColor: state.currDomain.total_spent < state.currCategory[0].average_cost ? theme.palette.error.main : theme.palette.success.main,
                             height: 56,
                             width: 56,
                             ml: 'auto'
@@ -51,12 +51,12 @@ const TotalCost = () => {
                 </Box>
                 <Box sx={{ pt: 1, display: 'flex', alignItems: 'center' }}>
                     {
-                        state.currDomain.total_spent < state.currCategory.average_cost ?
+                        state.currDomain.total_spent < state.currCategory[0].average_cost ?
                             <>
                                 <Box sx={{ mr: 1, display: 'flex' }}>
                                     <ArrowDownwardIcon sx={{ color: theme.palette.error.main }} />
                                     <Typography sx={{ color: theme.palette.error.main }}>
-                                        {((state.currCategory.average_cost - state.currDomain.total_spent) / state.currCategory.average_cost * 100).toFixed(2)}%
+                                        {((state.currCategory[0].average_cost - state.currDomain.total_spent) / state.currCategory[0].average_cost * 100).toFixed(2)}%
                                     </Typography>
                                 </Box>
                                 <Typography color="textSecondary" variant="caption">below category average</Typography>
@@ -66,7 +66,7 @@ const TotalCost = () => {
                                 <Box sx={{ mr: 1, display: 'flex' }}>
                                     <ArrowUpwardIcon sx={{ color: theme.palette.success.main }} />
                                     <Typography sx={{ color: theme.palette.success.main }}>
-                                        {((state.currDomain.total_spent - state.currCategory.average_cost) / state.currCategory.average_cost * 100).toFixed(2)}%
+                                        {((state.currDomain.total_spent - state.currCategory[0].average_cost) / state.currCategory[0].average_cost * 100).toFixed(2)}%
                                     </Typography>
                                 </Box>
                                 <Typography color="textSecondary" variant="caption">above category average</Typography>

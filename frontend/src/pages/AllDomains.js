@@ -1,6 +1,6 @@
 import Domains from '../components/Domains';
 import { Box, Toolbar, Container } from '@mui/material';
-import { DataGrid, GridToolbar } from '@mui/x-data-grid';
+import { GridToolbar } from '@mui/x-data-grid';
 
 const AllDomains = () => {
     return (

@@ -1,4 +1,3 @@
-import { useEffect } from "react"
 import { Box, Toolbar, Container, Grid } from '@mui/material';
 import Domains from '../components/Domains';
 import AddDomain from '../components/AddDomain';
