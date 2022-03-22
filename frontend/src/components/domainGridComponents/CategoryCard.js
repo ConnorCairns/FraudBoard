@@ -67,7 +67,7 @@ const CategoryCard = () => {
                             </Typography>
                         </ListItem>
                         <Divider />
-                        <ListItem key="count" alignItems="flex-start">
+                        <ListItem key="totalCategorySpend" alignItems="flex-start">
                             <ListItemAvatar >
                                 <Avatar sx={{ backgroundColor: theme.palette.info.main }}>
                                     <AttachMoneyIcon />

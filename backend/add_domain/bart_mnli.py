@@ -11,7 +11,7 @@ headers = {"Authorization": f"Bearer {API_KEY}"}
 def handler(tokens):
     payload = {
         "inputs": ' '.join(tokens),
-        "parameters": {"candidate_labels": ['pets', 'drugs', 'automotive', 'pharmacy']}
+        "parameters": {"candidate_labels": ['pets', 'drugs', 'automotive', 'pharmacy', 'counterfeits']}
     }
 
     response = requests.post(API_URL, headers=headers, json=payload)

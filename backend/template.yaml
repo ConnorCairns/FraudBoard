@@ -147,6 +147,28 @@ Resources:
       DockerContext: ./get_avg_category_cost
       DockerTag: python3.9-v1
 
+  GetDomainData:
+    Type: AWS::Serverless::Function # More info about Function Resource: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#awsserverlessfunction
+    Properties:
+      PackageType: Image
+      Architectures:
+        - x86_64
+      Timeout: 10
+      Policies:
+        - AmazonDynamoDBFullAccess
+      Events:
+        GetDomainDatatAPI:
+          Type: Api # More info about API Event Source: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#api
+          Properties:
+            Path: /get_domain_data
+            Method: get
+            # RestApiId:
+            #   Ref: ApiGatewayApi
+    Metadata:
+      Dockerfile: Dockerfile
+      DockerContext: ./get_domain_data
+      DockerTag: python3.9-v1
+
 Outputs:
   WhoIsApi:
     Description: "API Gateway endpoint URL for Prod stage for WhoIs function"
@@ -202,3 +224,12 @@ Outputs:
   GetCategoryCostIamRole:
     Description: "Implicit IAM Role created for Multiply function"
     Value: !GetAtt GetCategoryCostRole.Arn
+  GetDomainDataAPI:
+    Description: "API Gateway endpoint URL for Prod stage for getTLDPrice function"
+    Value: !Sub "https://${ServerlessRestApi}.execute-api.${AWS::Region}.amazonaws.com/Prod/get-domain-data/"
+  GetDomainData:
+    Description: "getTldPrice Lambda Function ARN"
+    Value: !GetAtt GetDomainData.Arn
+  GetDomainDataIamRole:
+    Description: "Implicit IAM Role created for Multiply function"
+    Value: !GetAtt GetDomainDataRole.Arn

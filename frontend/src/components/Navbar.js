@@ -65,7 +65,7 @@ const CustomDrawer = styled(Drawer, {
 const Navbar = () => {
     const [open, setOpen] = useState(false);
     const navigate = useNavigate()
-    const [state,] = useReducerContext();
+    const [state, dispatch] = useReducerContext();
 
     return (
         <>
@@ -101,7 +101,10 @@ const Navbar = () => {
                     </ListItemButton>
                     <Divider />
                     {state.prevDomains.map((prevDomain, idx) =>
-                        <ListItemButton key={prevDomain} onClick={() => navigate(`/domains/${prevDomain}`)}>
+                        <ListItemButton key={prevDomain} onClick={() => {
+                            dispatch({ type: 'updateDomainHistory', payload: prevDomain })
+                            navigate(`/domains/${prevDomain}`)
+                        }}>
                             <ListItemIcon >
                                 {numberIcons[idx]}
                             </ListItemIcon>

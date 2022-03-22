@@ -1,6 +1,6 @@
 import { Card, CardContent } from '@mui/material';
 import { Chart, LineSeries, SplineSeries, ArgumentAxis, ScatterSeries, ValueAxis, Legend, Title, Tooltip } from '@devexpress/dx-react-chart-material-ui';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { symbol, symbolCross } from 'd3-shape';
 import { Animation, EventTracker } from '@devexpress/dx-react-chart';
 import { useReducerContext } from '../../services/ReducerProvider';
@@ -56,13 +56,17 @@ const getGraphData = (data) => {
 
 const CostLineGraph = () => {
     const [chartData, setChartData] = useState(generateData(2.5, 12, 0.5))
-    console.log(chartData)
+    // console.log(chartData)
 
     const [state,] = useReducerContext()
 
     const [currCategoryData, setCurrCategoryData] = useState(getGraphData(state.currCategory))
 
-    console.log(currCategoryData)
+    useEffect(() => {
+        setCurrCategoryData(getGraphData(state.currCategory))
+    }, [state.currCategory])
+
+    // console.log(currCategoryData)
     return (
         <Card sx={{ height: 'min-content' }}>
             <CardContent>
