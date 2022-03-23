@@ -1,28 +1,32 @@
-import { Card, CardContent, Typography, Box, Avatar, List, ListItem, ListItemAvatar, ListItemText, Divider } from "@mui/material";
+import { Card, CardContent, Typography, Box, Avatar, List, ListItem, ListItemAvatar, ListItemText, Divider, FormControl, InputLabel, Select, MenuItem } from "@mui/material";
 import { useTheme } from '@material-ui/core';
 import AnalyticsIcon from '@mui/icons-material/Analytics';
 import { useReducerContext } from "../../services/ReducerProvider";
 import MoneyIcon from '@mui/icons-material/Money';
 import NumbersIcon from '@mui/icons-material/Numbers';
 import AttachMoneyIcon from '@mui/icons-material/AttachMoney';
+import { useState } from "react";
 
 const CategoryCard = () => {
     const [state,] = useReducerContext()
+    const [selectedCategory, setSelectedCategory] = useState(state.currCategory[0].category)
     const theme = useTheme()
 
-    const date = new Date(state.allCategory[0].timeDate * 1000).toLocaleString() //init in milliseconds so *1000
+    const date = new Date(state.otherCategories[selectedCategory][0].timeDate * 1000).toLocaleString() //init in milliseconds so *1000
 
     return (
-        <Card sx={{marginBottom: '16px'}}>
+        <Card>
             <CardContent sx={{ pb: 0 }}>
                 <Box sx={{ display: 'flex' }}>
-                    <Box sx={{ display: 'flex', flexDirection: 'column' }}>
-                        <Typography color="textSecondary" variant="overline" gutterBottom sx={{ fontWeight: 600, letterSpacing: '0.5px', }}>
-                            CATEGORY
-                        </Typography>
-                        <Typography color="textPrimary" variant="h4" sx={{ fontWeight: 700, textTransform: 'capitalize' }}>
-                            ALL
-                        </Typography>
+                    <Box sx={{ display: 'flex', flexDirection: 'column', minWidth: 120 }}>
+                        <FormControl fullWidth>
+                            <InputLabel id="categorySelectLabel">CATEGORY</InputLabel>
+                            <Select labelId="categorySelectLabel" id="categorySelect" value={selectedCategory} label="CATEGORY" onChange={(e) => setSelectedCategory(e.target.value)}>
+                                {Object.keys(state.otherCategories).map(category => (
+                                    <MenuItem key={category} value={category}>{category}</MenuItem>
+                                ))}
+                            </Select>
+                        </FormControl>
                         <Typography color="textSecondary" variant="body2">
                             {`Updated ${date}`}
                         </Typography>
@@ -51,7 +55,7 @@ const CategoryCard = () => {
                                 primary="Average Spend"
                             />
                             <Typography variant="h5" textAlign="right" sx={{ alignSelf: 'center' }}>
-                                ${state.allCategory[0].average_cost.toFixed(2)}
+                                ${state.otherCategories[selectedCategory][0].average_cost.toFixed(2)}
                             </Typography>
                         </ListItem>
                         <Divider />
@@ -66,7 +70,7 @@ const CategoryCard = () => {
                                 primary="Website Count"
                             />
                             <Typography variant="h5" textAlign="right" sx={{ alignSelf: 'center' }}>
-                                {state.allCategory[0].count}
+                                {state.otherCategories[selectedCategory][0].count}
                             </Typography>
                         </ListItem>
                         <Divider />
@@ -81,7 +85,7 @@ const CategoryCard = () => {
                                 primary="Total Category Spend"
                             />
                             <Typography variant="h5" textAlign="right" sx={{ alignSelf: 'center' }}>
-                                ${state.allCategory[0].total_spent.toFixed(2)}
+                                ${state.otherCategories[selectedCategory][0].total_spent.toFixed(2)}
                             </Typography>
                         </ListItem>
                     </List>

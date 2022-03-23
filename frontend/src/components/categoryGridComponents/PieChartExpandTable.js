@@ -44,16 +44,16 @@ const PieChartExpandTable = () => {
                 </TableHead>
                 <TableBody>
                     {Object.keys(state.otherCategories).map(category => {
-                        const difference = (((state.otherCategories[category].total_spent / state.allCategory[0].total_spent) - (state.otherCategories[category].count / state.allCategory[0].count)) * 100).toFixed(2)
-                        return (< TableRow key={category} >
+                        const difference = (((state.otherCategories[category][0].total_spent / state.allCategory[0].total_spent) - (state.otherCategories[category][0].count / state.allCategory[0].count)) * 100).toFixed(2)
+                        return (< TableRow key={category}>
                             <TableCell>
                                 {category}
                             </TableCell>
                             <TableCell align='right' sx={{ fontWeight: 600 }}>
-                                {state.otherCategories[category].total_spent}
+                                {state.otherCategories[category][0].total_spent}
                             </TableCell>
                             <TableCell align='right' sx={{ fontWeight: 600 }}>
-                                {state.otherCategories[category].count}
+                                {state.otherCategories[category][0].count}
                             </TableCell>
                             <TableCell align='right' sx={{ fontWeight: 600, color: difference > 0 ? theme.palette.success.main : theme.palette.error.main }}>
                                 {difference}

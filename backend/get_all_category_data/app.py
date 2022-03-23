@@ -36,9 +36,9 @@ def handler(event, context):
         combined_obj['all'] = overall_res['Items']
 
         for category in CATEGORIES:
-            response = cost_dynamo.query(KeyConditionExpression=Key("category").eq(f"{category}"), Limit=1, ScanIndexForward=False) 
+            response = cost_dynamo.query(KeyConditionExpression=Key("category").eq(f"{category}"), Limit=5, ScanIndexForward=False) 
             if len(response['Items']) > 0:
-                combined_obj[category] = response['Items'][0]
+                combined_obj[category] = response['Items']
 
     except ClientError as e:
         print(e.response['Error']['Message'])

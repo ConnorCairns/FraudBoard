@@ -2,6 +2,7 @@ import { useTheme } from "@material-ui/core";
 import { Box, Container, Grid, Toolbar, Typography } from "@mui/material";
 import { useEffect, useState } from "react";
 import CategoriesPieChart from "../components/categoryGridComponents/CategoriesPieChart";
+import CategoryCard from "../components/categoryGridComponents/CategoryCard";
 import OverallCost from "../components/categoryGridComponents/OverallCost";
 import useFetch from "../hooks/useFetch";
 import { useReducerContext } from "../services/ReducerProvider";
@@ -17,6 +18,7 @@ const CategoryPage = () => {
             dispatch({ type: 'updateAllCategory', payload: res.all })
             delete res.all //Might be better way to do this idk
             dispatch({type: 'updateOtherCategories', payload: res})
+            dispatch({type: 'updateCurrCategory', payload: res[Object.keys(res)[0]]})
             setLoading(false)
         }
     }, [status, res, dispatch])
@@ -42,13 +44,14 @@ const CategoryPage = () => {
                         <Typography>Loading ...</Typography>
                         :
                         <Grid container spacing={2}>
-                            <Grid item xs={12} sm={12} lg={4}>
+                            <Grid item xs={12} sm={12} lg={4} sx={{display: 'flex', flexDirection: 'column'}}>
                                 <OverallCost />
+                                <CategoryCard />
                             </Grid>
                             <Grid item xs={12} sm={12} lg={8}>
-                                <CategoriesPieChart />
+                                <CategoriesPieChart/>
                             </Grid>
-                            <Grid item xs={12}>
+                            <Grid item xs={12} sm={12} lg={4}>
                             </Grid>
                         </Grid>
                 }
