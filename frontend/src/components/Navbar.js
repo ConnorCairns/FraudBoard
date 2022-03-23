@@ -13,6 +13,7 @@ import LooksTwoIcon from '@mui/icons-material/LooksTwo';
 import Looks3Icon from '@mui/icons-material/Looks3';
 import Looks4Icon from '@mui/icons-material/Looks4';
 import Looks5Icon from '@mui/icons-material/Looks5';
+import CategoryIcon from '@mui/icons-material/Category';
 
 const numberIcons = [<LooksOneIcon />, <LooksTwoIcon />, <Looks3Icon />, <Looks4Icon />, <Looks5Icon />]
 
@@ -98,6 +99,12 @@ const Navbar = () => {
                             <TableRowsIcon />
                         </ListItemIcon>
                         <ListItemText primary="All Domains" />
+                    </ListItemButton>
+                    <ListItemButton key={"Categories"} onClick={() => navigate("/categories")}>
+                        <ListItemIcon >
+                            <CategoryIcon />
+                        </ListItemIcon>
+                        <ListItemText primary="Categories" />
                     </ListItemButton>
                     <Divider />
                     {state.prevDomains.map((prevDomain, idx) =>

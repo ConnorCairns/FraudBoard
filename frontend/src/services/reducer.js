@@ -2,6 +2,7 @@ export const initialState = {
     currDomain: {},
     currCategory: {},
     allCategory: {},
+    otherCategories: {},
     prevDomains: []
 }
 
@@ -23,6 +24,8 @@ export const reducer = (state, action) => {
         }
         case 'loadPrevDomains':
             return { ...state, prevDomains: action.payload }
+        case 'updateOtherCategories':
+            return { ...state, otherCategories: action.payload }
         default:
             return state
     }

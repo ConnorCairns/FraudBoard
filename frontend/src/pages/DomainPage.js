@@ -16,10 +16,6 @@ const DomainPage = () => {
     const [loading, setLoading] = useState(true)
 
     useEffect(() => {
-
-    })
-
-    useEffect(() => {
         if (status === 'fetched') {
             dispatch({ type: 'updateCurrDomain', payload: res.domain_data })
             dispatch({ type: 'updateCurrCategory', payload: res.category_data })

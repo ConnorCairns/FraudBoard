@@ -2,8 +2,15 @@ import boto3
 from botocore.exceptions import ClientError
 from boto3.dynamodb.conditions import Key
 import json
+from decimal import Decimal
 
 TABLE = "category_costs"
+
+class DecimalEncoder(json.JSONEncoder):
+    def default(self, obj):
+        if isinstance(obj, Decimal):
+            return float(obj)
+        return json.JSONEncoder.default(self, obj)
 
 def res(status, response): return {
     "statusCode": status,
@@ -23,9 +30,6 @@ def handler(event, context):
 
     try:
         response = dynamo.query(KeyConditionExpression=Key("category").eq(key), Limit=1, ScanIndexForward=False)
-        response['Items'][0]['average_cost'] = float(response['Items'][0]['average_cost'])
-        response['Items'][0]['count'] = int(response['Items'][0]['count'])
-        response['Items'][0]['timeDate'] = int(response['Items'][0]['timeDate'])
     except ClientError as e:
          print(e.response['Error']['Message'])
          return res(500, 'Something went wrong')
@@ -33,7 +37,7 @@ def handler(event, context):
         print(e)
         return res(500, 'Something went wrong')
     else:
-        return res(200, json.dumps(response['Items']))
+        return res(200, json.dumps(response['Items'], cls=DecimalEncoder))
 
 if __name__ == '__main__':
     print(handler({"queryStringParameters": {

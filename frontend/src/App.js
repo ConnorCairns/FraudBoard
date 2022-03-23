@@ -8,6 +8,7 @@ import DomainPage from './pages/DomainPage.js';
 import AllDomains from './pages/AllDomains';
 import { useEffect } from 'react';
 import { useReducerContext } from './services/ReducerProvider';
+import CategoryPage from './pages/CategoryPage';
 
 const theme = createTheme({
   palette: {
@@ -40,6 +41,7 @@ function App() {
               <Route path="/" element={<Dashboard />} />
               <Route path="/domains" element={<AllDomains />} />
               <Route path="/domains/:domainName" element={<DomainPage />} />
+              <Route path="/categories" element={<CategoryPage />} />
             </Routes>
           </Router>
         </Box>
