@@ -1,6 +1,6 @@
-import { useReducerContext } from '../../services/ReducerProvider';
 import { Card, CardContent, Grid } from "@mui/material";
 import PieChartComponent from './PieChart';
+import PieChartExpand from "./PieChartExpand";
 
 //TODO: refactor this and categoryPage into one component
 const CategoriesPieChart = () => {
@@ -12,6 +12,7 @@ const CategoriesPieChart = () => {
           <PieChartComponent />
         </Grid>
       </CardContent>
+      <PieChartExpand />
     </Card>
   )
 }
