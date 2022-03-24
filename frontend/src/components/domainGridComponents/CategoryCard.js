@@ -23,6 +23,9 @@ const CategoryCard = () => {
                         <Typography color="textPrimary" variant="h4" sx={{ fontWeight: 700, textTransform: 'capitalize' }}>
                             {state.currCategory[0].category}
                         </Typography>
+                        <Typography color="textSecondary" variant="body2">
+                            {`Updated ${date}`}
+                        </Typography>
                     </Box>
                     <Avatar
                         sx={{
@@ -44,8 +47,8 @@ const CategoryCard = () => {
                                 </Avatar>
                             </ListItemAvatar>
                             <ListItemText
+                                sx={{ alignSelf: 'center' }}
                                 primary="Average Spend"
-                                secondary={`Updated ${date}`}
                             />
                             <Typography variant="h5" textAlign="right" sx={{ alignSelf: 'center' }}>
                                 ${state.currCategory[0].average_cost.toFixed(2)}
@@ -59,8 +62,8 @@ const CategoryCard = () => {
                                 </Avatar>
                             </ListItemAvatar>
                             <ListItemText
+                                sx={{ alignSelf: 'center' }}
                                 primary="Website Count"
-                                secondary={`Updated ${date}`}
                             />
                             <Typography variant="h5" textAlign="right" sx={{ alignSelf: 'center' }}>
                                 {state.currCategory[0].count}
@@ -74,8 +77,8 @@ const CategoryCard = () => {
                                 </Avatar>
                             </ListItemAvatar>
                             <ListItemText
+                                sx={{ alignSelf: 'center' }}
                                 primary="Total Category Spend"
-                                secondary={`Updated ${date}`}
                             />
                             <Typography variant="h5" textAlign="right" sx={{ alignSelf: 'center' }}>
                                 ${state.currCategory[0].total_spent.toFixed(2)}

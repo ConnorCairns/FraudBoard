@@ -29,7 +29,7 @@ const CategoryCard = () => {
                     </Box>
                     <Avatar
                         sx={{
-                            backgroundColor: theme.palette.primary.main,
+                            backgroundColor: theme.palette.error.main,
                             height: 56,
                             width: 56,
                             ml: 'auto'

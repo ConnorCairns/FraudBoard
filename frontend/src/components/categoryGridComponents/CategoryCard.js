@@ -1,6 +1,6 @@
 import { Card, CardContent, Typography, Box, Avatar, List, ListItem, ListItemAvatar, ListItemText, Divider, FormControl, InputLabel, Select, MenuItem } from "@mui/material";
 import { useTheme } from '@material-ui/core';
-import AnalyticsIcon from '@mui/icons-material/Analytics';
+import AutoAwesomeMotionIcon from '@mui/icons-material/AutoAwesomeMotion';
 import { useReducerContext } from "../../services/ReducerProvider";
 import MoneyIcon from '@mui/icons-material/Money';
 import NumbersIcon from '@mui/icons-material/Numbers';
@@ -33,13 +33,13 @@ const CategoryCard = () => {
                     </Box>
                     <Avatar
                         sx={{
-                            backgroundColor: theme.palette.primary.main,
+                            backgroundColor: theme.palette.success.main,
                             height: 56,
                             width: 56,
                             ml: 'auto'
                         }}
                     >
-                        <AnalyticsIcon />
+                        <AutoAwesomeMotionIcon />
                     </Avatar>
                 </Box>
                 <Box sx={{ pt: 1, display: 'flex', alignItems: 'center' }}>
