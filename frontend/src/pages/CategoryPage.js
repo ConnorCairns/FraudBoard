@@ -9,7 +9,7 @@ import { useReducerContext } from "../services/ReducerProvider";
 
 const CategoryPage = () => {
     const theme = useTheme();
-    const [status, res] = useFetch('http://localhost:4000/get_all_category_data');
+    const [status, res] = useFetch('https://o29ulont8a.execute-api.eu-west-1.amazonaws.com/Prod/get_all_category_data');
     const [, dispatch] = useReducerContext();
     const [loading, setLoading] = useState(true);
 
@@ -17,8 +17,8 @@ const CategoryPage = () => {
         if (status === 'fetched') {
             dispatch({ type: 'updateAllCategory', payload: res.all })
             delete res.all //Might be better way to do this idk
-            dispatch({type: 'updateOtherCategories', payload: res})
-            dispatch({type: 'updateCurrCategory', payload: res[Object.keys(res)[0]]})
+            dispatch({ type: 'updateOtherCategories', payload: res })
+            dispatch({ type: 'updateCurrCategory', payload: res[Object.keys(res)[0]] })
             setLoading(false)
         }
     }, [status, res, dispatch])
@@ -44,12 +44,12 @@ const CategoryPage = () => {
                         <Typography>Loading ...</Typography>
                         :
                         <Grid container spacing={2}>
-                            <Grid item xs={12} sm={12} lg={4} sx={{display: 'flex', flexDirection: 'column'}}>
+                            <Grid item xs={12} sm={12} lg={4} sx={{ display: 'flex', flexDirection: 'column' }}>
                                 <OverallCost />
                                 <CategoryCard />
                             </Grid>
                             <Grid item xs={12} sm={12} lg={8}>
-                                <CategoriesPieChart/>
+                                <CategoriesPieChart />
                             </Grid>
                             <Grid item xs={12} sm={12} lg={4}>
                             </Grid>

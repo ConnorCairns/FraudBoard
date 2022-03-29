@@ -7,11 +7,12 @@ import { useEffect, useState } from 'react';
 import { useReducerContext } from '../services/ReducerProvider';
 import CategoryCard from '../components/domainGridComponents/CategoryCard';
 import CostLineGraph from '../components/domainGridComponents/CostLineGraph';
+import DomainTable from '../components/domainGridComponents/DomainTable';
 
 const DomainPage = () => {
     const params = useParams()
     const theme = useTheme()
-    const [status, res] = useFetch(`http://localhost:4000/get_domain_data?domain=${params.domainName}`)
+    const [status, res] = useFetch(`https://o29ulont8a.execute-api.eu-west-1.amazonaws.com/Prod/get_domain_data?domain=${params.domainName}`)
     const [, dispatch] = useReducerContext()
     const [loading, setLoading] = useState(true)
 
@@ -51,7 +52,10 @@ const DomainPage = () => {
                             <Grid item xs={12} sm={12} lg={8}>
                                 <CategoryCard />
                             </Grid>
-                            <Grid item xs={12}>
+                            <Grid item xs={12} sm={12} lg={4}>
+                                <DomainTable />
+                            </Grid>
+                            <Grid item xs={12} sm={12} lg={8}>
                                 <CostLineGraph />
                             </Grid>
                         </Grid>

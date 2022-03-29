@@ -25,9 +25,13 @@ const theme = createTheme({
 function App() {
   const [, dispatch] = useReducerContext();
   useEffect(() => {
-    const savedPrevDomains = localStorage.getItem("prevDomains")
-    if (savedPrevDomains != null) {
-      dispatch({ type: 'loadPrevDomains', payload: JSON.parse(savedPrevDomains) })
+    try {
+      const savedPrevDomains = localStorage.getItem("prevDomains")
+      if (savedPrevDomains != null) {
+        dispatch({ type: 'loadPrevDomains', payload: JSON.parse(savedPrevDomains) })
+      }
+    } catch (e) {
+      console.log("Error getting local storage")
     }
   }, [])
 

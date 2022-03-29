@@ -12,7 +12,7 @@ const CategoryCard = () => {
     const [selectedCategory, setSelectedCategory] = useState(state.currCategory[0].category)
     const theme = useTheme()
 
-    const date = new Date(state.otherCategories[selectedCategory][0].timeDate * 1000).toLocaleString() //init in milliseconds so *1000
+    const date = new Date(state.otherCategories[selectedCategory][0].timeDate * 1000).toLocaleString('en-GB') //init in milliseconds so *1000
 
     return (
         <Card>

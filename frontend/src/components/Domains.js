@@ -132,7 +132,7 @@ const initialState = {
 }
 
 const Domains = ({ title = "Domains", DataGridProps, reqLimit = 5 }) => {
-  const URL = `http://localhost:4000/get-domains?limit=${reqLimit}`
+  const URL = `https://o29ulont8a.execute-api.eu-west-1.amazonaws.com/Prod/get-domains?limit=${reqLimit}`
   const [status, domains] = useFetch(URL)
   const [rows, setRows] = useState();
   const navigate = useNavigate();

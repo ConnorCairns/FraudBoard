@@ -8,7 +8,7 @@ import CustomAlert from './CustomAlert';
 const AddDomain = () => {
     const [loading, setLoading] = useState();
     const [url, setURL] = useState("");
-    const [apiKey, setApiKey] = useState();
+    const [apiKey, setApiKey] = useState("");
     const [open, setOpen] = useState(false);
     const [openInfo, setOpenInfo] = useState(false);
     const [openError, setOpenError] = useState(false);
@@ -20,7 +20,7 @@ const AddDomain = () => {
         setOpenInfo(false)
         setOpenError(false)
 
-        fetch(`http://localhost:4000/add-domain?api_key=${apiKey}`, {
+        fetch(`https://o29ulont8a.execute-api.eu-west-1.amazonaws.com/Prod/add-domain?api_key=${apiKey}`, {
             crossDomain: true,
             method: 'POST',
             mode: 'cors',

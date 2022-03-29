@@ -62,8 +62,9 @@ def get_domain_cost(tld, creation_date, expiration_date):
 def handler(event, context):
 
     api_key = event["queryStringParameters"]["api_key"]
+    env_api_key = os.environ.get("API_KEY")
 
-    if api_key != os.environ.get("API_KEY"):
+    if api_key != env_api_key:
         return res(401, "Wrong API key")
 
     try:  # improve this at some point
@@ -140,16 +141,16 @@ def handler(event, context):
         }
 
         try:
-            # dynamo.put_item(
-            #     Item=w, ConditionExpression="attribute_not_exists(domain_name)")
+            dynamo.put_item(
+                Item=w, ConditionExpression="attribute_not_exists(domain_name)")
 
-            # dynamo_cost.put_item(
-            #     Item=cost_item
-            # )
+            dynamo_cost.put_item(
+                Item=cost_item
+            )
 
-            # dynamo_cost.put_item(
-            #     Item=overall_item
-            # )
+            dynamo_cost.put_item(
+                Item=overall_item
+            )
 
             return res(201, "Successfully added domain")
         except Exception as e:

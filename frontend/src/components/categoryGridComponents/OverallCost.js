@@ -10,10 +10,10 @@ const CategoryCard = () => {
     const [state,] = useReducerContext()
     const theme = useTheme()
 
-    const date = new Date(state.allCategory[0].timeDate * 1000).toLocaleString() //init in milliseconds so *1000
+    const date = new Date(state.allCategory[0].timeDate * 1000).toLocaleString('en-GB') //init in milliseconds so *1000
 
     return (
-        <Card sx={{marginBottom: '16px'}}>
+        <Card sx={{ marginBottom: '16px' }}>
             <CardContent sx={{ pb: 0 }}>
                 <Box sx={{ display: 'flex' }}>
                     <Box sx={{ display: 'flex', flexDirection: 'column' }}>

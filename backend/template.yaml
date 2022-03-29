@@ -41,7 +41,7 @@ Resources:
     Properties:
       Environment:
         Variables:
-          API_KEY: !Sub "${API_KEY}"
+          API_KEY: "myverysecureapikey"
       PackageType: Image
       Architectures:
         - x86_64

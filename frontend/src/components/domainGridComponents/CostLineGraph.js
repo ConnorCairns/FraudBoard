@@ -51,7 +51,7 @@ const LineWithCrossPoint = (props) => (
 )
 
 const getGraphData = (data) => {
-    return data.map(date => ({ 'lineValue': date.average_cost, 'argument': new Date(date.timeDate * 1000).toLocaleString() })).reverse()
+    return data.map(date => ({ 'lineValue': date.average_cost, 'argument': new Date(date.timeDate * 1000).toLocaleString('en-GB') })).reverse()
 }
 
 const CostLineGraph = () => {

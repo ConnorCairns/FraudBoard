@@ -10,6 +10,25 @@ import { useState } from "react";
 import CostTable from './CostTable';
 import { useReducerContext } from "../../services/ReducerProvider";
 
+const headCells = [
+    {
+        id: 'name',
+        numeric: false,
+        label: 'Type'
+    },
+    {
+        id: 'cost',
+        numeric: true,
+        label: 'Cost ($)'
+    },
+    {
+        id: 'share',
+        numeric: true,
+        label: 'Percent of Total (%)'
+    },
+
+]
+
 const ExpandMore = styled((props) => {
     const { expand, ...other } = props;
     return <IconButton {...other} />;
@@ -25,6 +44,28 @@ const TotalCost = () => {
     const [state,] = useReducerContext()
     const [expanded, setExpanded] = useState(false)
     const theme = useTheme()
+
+
+    const tableData = [
+        {
+            key: 'DomainCost',
+            name: 'Domain',
+            cost: state.currDomain.domain_cost,
+            share: `${((state.currDomain.domain_cost / state.currDomain.total_spent) * 100).toFixed(2)}`
+        },
+        {
+            key: 'HostingCost',
+            name: 'Hosting',
+            cost: state.currDomain.hosting_cost,
+            share: `${((state.currDomain.hosting_cost / state.currDomain.total_spent) * 100).toFixed(2)}`
+        },
+        {
+            key: 'AdvertisingCost',
+            name: 'Advertising',
+            cost: state.currDomain.advertising_spend,
+            share: `${((state.currDomain.advertising_spend / state.currDomain.total_spent) * 100).toFixed(2)}`
+        },
+    ]
 
     return (
         <Card sx={{ height: 'min-content' }}>
@@ -82,7 +123,7 @@ const TotalCost = () => {
             <Collapse in={expanded} timeout="auto" unmountOnExit>
                 <Divider />
                 <CardContent>
-                    <CostTable />
+                    <CostTable headCells={headCells} tableData={tableData} />
                 </CardContent>
             </Collapse>
         </Card >
