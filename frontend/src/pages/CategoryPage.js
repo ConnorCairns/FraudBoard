@@ -6,10 +6,11 @@ import CategoryCard from "../components/categoryGridComponents/CategoryCard";
 import OverallCost from "../components/categoryGridComponents/OverallCost";
 import useFetch from "../hooks/useFetch";
 import { useReducerContext } from "../services/ReducerProvider";
+import baseUrl from "../utils/url";
 
 const CategoryPage = () => {
     const theme = useTheme();
-    const [status, res] = useFetch('https://o29ulont8a.execute-api.eu-west-1.amazonaws.com/Prod/get_all_category_data');
+    const [status, res] = useFetch(`${baseUrl}get_all_category_data`);
     const [, dispatch] = useReducerContext();
     const [loading, setLoading] = useState(true);
 

@@ -3,18 +3,20 @@ import { Box, Toolbar, Container, Typography, Grid } from '@mui/material';
 import { useTheme } from '@material-ui/core';
 import TotalCost from '../components/domainGridComponents/TotalCost';
 import useFetch from '../hooks/useFetch';
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useReducerContext } from '../services/ReducerProvider';
 import CategoryCard from '../components/domainGridComponents/CategoryCard';
 import CostLineGraph from '../components/domainGridComponents/CostLineGraph';
 import DomainTable from '../components/domainGridComponents/DomainTable';
+import baseUrl from '../utils/url'
 
 const DomainPage = () => {
     const params = useParams()
     const theme = useTheme()
-    const [status, res] = useFetch(`https://o29ulont8a.execute-api.eu-west-1.amazonaws.com/Prod/get_domain_data?domain=${params.domainName}`)
+    const [status, res] = useFetch(`${baseUrl}get_domain_data?domain=${params.domainName}`)
     const [, dispatch] = useReducerContext()
     const [loading, setLoading] = useState(true)
+    const titleRef = useRef(null);
 
     useEffect(() => {
         if (status === 'fetched') {
@@ -38,7 +40,7 @@ const DomainPage = () => {
                 height: '100vh',
                 overflow: 'auto',
             }}>
-            <Toolbar />
+            <Toolbar ref={titleRef}/>
             <Container maxWidth="false" sx={{ mt: 4, mb: 4 }}>
                 <Typography component="h1" variant="h4" color={theme.palette.info.main} gutterBottom>{params.domainName}</Typography>
                 {
@@ -53,7 +55,7 @@ const DomainPage = () => {
                                 <CategoryCard />
                             </Grid>
                             <Grid item xs={12} sm={12} lg={4}>
-                                <DomainTable />
+                                <DomainTable titleRef={titleRef}/>
                             </Grid>
                             <Grid item xs={12} sm={12} lg={8}>
                                 <CostLineGraph />

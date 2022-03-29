@@ -29,20 +29,20 @@ const headCells = [
 
 ]
 
-const ExpandMore = styled((props) => {
-    const { expand, ...other } = props;
-    return <IconButton {...other} />;
-})(({ theme, expand }) => ({
-    transform: !expand ? 'rotate(0deg)' : 'rotate(180deg)',
-    margin: 'auto',
-    transition: theme.transitions.create('transform', {
-        duration: theme.transitions.duration.shortest,
-    }),
-}));
+// const ExpandMore = styled((props) => {
+//     const { expand, ...other } = props;
+//     return <IconButton {...other} />;
+// })(({ theme, expand }) => ({
+//     transform: !expand ? 'rotate(0deg)' : 'rotate(180deg)',
+//     margin: 'auto',
+//     transition: theme.transitions.create('transform', {
+//         duration: theme.transitions.duration.shortest,
+//     }),
+// }));
 
 const TotalCost = () => {
     const [state,] = useReducerContext()
-    const [expanded, setExpanded] = useState(false)
+    // const [expanded, setExpanded] = useState(false)
     const theme = useTheme()
 
 
@@ -115,17 +115,17 @@ const TotalCost = () => {
                     }
                 </Box>
             </CardContent>
-            <CardActions sx={{ pt: 0 }}>
+            {/* <CardActions sx={{ pt: 0 }}>
                 <ExpandMore expand={expanded} onClick={() => setExpanded(!expanded)}>
                     <ExpandMoreIcon />
                 </ExpandMore>
-            </CardActions>
-            <Collapse in={expanded} timeout="auto" unmountOnExit>
-                <Divider />
-                <CardContent>
+            </CardActions> */}
+            {/* <Collapse in={expanded} timeout="auto" unmountOnExit> */}
+                <Divider sx={{mt: 2}}/>
+                {/* <CardContent> */}
                     <CostTable headCells={headCells} tableData={tableData} />
-                </CardContent>
-            </Collapse>
+                {/* </CardContent> */}
+            {/* </Collapse> */}
         </Card >
     )
 }

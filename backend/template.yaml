@@ -193,6 +193,27 @@ Resources:
       Dockerfile: Dockerfile
       DockerContext: ./get_all_category_data
       DockerTag: python3.9-v1
+  GetRegistrars:
+    Type: AWS::Serverless::Function # More info about Function Resource: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#awsserverlessfunction
+    Properties:
+      PackageType: Image
+      Architectures:
+        - x86_64
+      Timeout: 10
+      Policies:
+        - AmazonDynamoDBFullAccess
+      Events:
+        GetRegistrarsAPI:
+          Type: Api # More info about API Event Source: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#api
+          Properties:
+            Path: /get_registrars
+            Method: get
+            # RestApiId:
+            #   Ref: ApiGatewayApi
+    Metadata:
+      Dockerfile: Dockerfile
+      DockerContext: ./get_registrars
+      DockerTag: python3.9-v1
 
 Outputs:
   WhoIsApi:
@@ -267,3 +288,12 @@ Outputs:
   GetAllCategoryDataIamRole:
     Description: "Implicit IAM Role created for Multiply function"
     Value: !GetAtt GetAllCategoryDataRole.Arn
+  GetRegistrarsAPI:
+    Description: "API Gateway endpoint URL for Prod stage for getTLDPrice function"
+    Value: !Sub "https://${ServerlessRestApi}.execute-api.${AWS::Region}.amazonaws.com/Prod/get-domain-data/"
+  GetRegistrars:
+    Description: "getTldPrice Lambda Function ARN"
+    Value: !GetAtt GetRegistrars.Arn
+  GetRegistrarsIamRole:
+    Description: "Implicit IAM Role created for Multiply function"
+    Value: !GetAtt GetRegistrarsRole.Arn

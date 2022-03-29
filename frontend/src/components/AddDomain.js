@@ -3,6 +3,7 @@ import { LoadingButton } from '@mui/lab';
 import Title from './Title';
 import { useState } from "react";
 import CustomAlert from './CustomAlert';
+import baseUrl from "../utils/url";
 
 
 const AddDomain = () => {
@@ -20,7 +21,7 @@ const AddDomain = () => {
         setOpenInfo(false)
         setOpenError(false)
 
-        fetch(`https://o29ulont8a.execute-api.eu-west-1.amazonaws.com/Prod/add-domain?api_key=${apiKey}`, {
+        fetch(`${baseUrl}add-domain?api_key=${apiKey}`, {
             crossDomain: true,
             method: 'POST',
             mode: 'cors',
@@ -56,7 +57,7 @@ const AddDomain = () => {
                 <Box component="form" onSubmit={e => { e.preventDefault(); handleClick() }} sx={{ display: 'flex', flexDirection: 'column' }}>
                     <Title title="Add Domain" />
                     <TextField value={url} disabled={loading} onChange={(e) => setURL(e.target.value)} fullWidth size="small" variant="outlined" autoComplete="url" placeholder="Domain to add" type="text" />
-                    <TextField sx={{ mt: 2 }} value={apiKey} disabled={loading} onChange={(e) => setApiKey(e.target.value)} fullWidth size="small" variant="outlined" autoComplete placeholder="API Key" type="text" />
+                    <TextField sx={{ mt: 2 }} value={apiKey} disabled={loading} onChange={(e) => setApiKey(e.target.value)} fullWidth size="small" variant="outlined" autoComplete="api key" placeholder="API Key" type="text" />
                     <LoadingButton sx={{ ml: 'auto', mt: '0.5rem' }} onClick={handleClick} loading={loading} variant="contained">Submit
                     </LoadingButton>
                 </Box>

@@ -8,6 +8,7 @@ import OpenInNewIcon from '@mui/icons-material/OpenInNew';
 import { useNavigate } from 'react-router-dom';
 import { unmarshall } from '../utils/unmarshall'
 import { useReducerContext } from '../services/ReducerProvider.js';
+import baseUrl from '../utils/url.js';
 
 function isOverflown(element) {
   return (
@@ -132,7 +133,7 @@ const initialState = {
 }
 
 const Domains = ({ title = "Domains", DataGridProps, reqLimit = 5 }) => {
-  const URL = `https://o29ulont8a.execute-api.eu-west-1.amazonaws.com/Prod/get-domains?limit=${reqLimit}`
+  const URL = `${baseUrl}get-domains?limit=${reqLimit}`
   const [status, domains] = useFetch(URL)
   const [rows, setRows] = useState();
   const navigate = useNavigate();
