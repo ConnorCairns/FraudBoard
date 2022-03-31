@@ -24,8 +24,22 @@ const CostTable = ({ headCells, tableData, titleRef }) => {
     const cols = headCells.map(headCell => headCell.id)
     const [expanded, setExpanded] = useState(false);
     const [state, dispatch] = useReducerContext();
-    const [status, registrars] = useFetch(`${baseUrl}get_registrars?registrar=${state.currDomain.registrar}`);
+    const [registrars, setRegistrars] = useState(null);
     const navigate = useNavigate()
+
+    useEffect(() => {
+        if (expanded === true) {
+            fetch(`${baseUrl}get_registrars?registrar=${state.currDomain.registrar}`)
+                .then(response => response.json())
+                .then(data => {
+                    console.log(data)
+                    //Slice to stay consistent between domains
+                    setRegistrars(data.filter(registrar => registrar.domain_name != state.currDomain.domain_name).slice(0, 3))
+                })
+        } else {
+            setRegistrars(null)
+        }
+    }, [expanded])
 
     return (
         <TableContainer component={Paper}>
@@ -56,7 +70,7 @@ const CostTable = ({ headCells, tableData, titleRef }) => {
                                                 </ExpandMore>
                                             </TableCell>
                                         </TableRow>
-                                        <TableRow>
+                                        <TableRow key={`1-${row.key}`}>
                                             <TableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={6}>
                                                 <Collapse in={expanded} timeout="auto" unmountOnExit>
                                                     <Box sx={{ margin: 1, p: 1 }}>
@@ -64,14 +78,14 @@ const CostTable = ({ headCells, tableData, titleRef }) => {
                                                             Other domains on same registrar
                                                         </Typography>
                                                         {
-                                                            status === 'fetched' ?
+                                                            registrars !== null ?
                                                                 <List>
                                                                     {registrars.map((registrar, idx) => (
                                                                         <>
                                                                             <ListItem key={`${registrar.domain_name}-${idx}`} disablePadding>
                                                                                 <ListItemButton onClick={() => {
-                                                                                    dispatch({ type: 'updateDomainHistory', payload: registrar.domain_name})
-                                                                                    titleRef.current.scrollIntoView({behavior: 'smooth'})
+                                                                                    dispatch({ type: 'updateDomainHistory', payload: registrar.domain_name })
+                                                                                    titleRef.current.scrollIntoView({ behavior: 'smooth' })
                                                                                     setExpanded(false)
                                                                                     navigate(`/domains/${registrar.domain_name}`)
                                                                                 }}>

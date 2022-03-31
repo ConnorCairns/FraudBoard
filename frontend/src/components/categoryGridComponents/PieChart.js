@@ -8,6 +8,7 @@ const getPieChartData = (data) => {
     let websiteCount = []
 
     for (let category in data) {
+        // pieChartData.push({ name: category: totalSpent: data[category][0].total_spent.toFixed(2), count: data[category][0].count})
         pieChartData.push({ name: category, area: data[category][0].total_spent.toFixed(2) })
         websiteCount.push({ name: category, area: data[category][0].count })
     }
@@ -19,13 +20,14 @@ const PieChartComponent = ({ removeHovered, setHovered }) => {
     const [state,] = useReducerContext();
 
     const pieChartData = getPieChartData(state.otherCategories)
+    console.log(pieChartData)
 
     return (
         <>
             {
                 pieChartData.map((options, idx) => (
                     <Grid key={idx} item xs={12} sm={6} lg={6}>
-                        <PieChart sx={{ margin: 'auto' }}  title={options.title} key={idx} dataSource={options.dataSource} sizeGroup="piesGroup">
+                        <PieChart sx={{ margin: 'auto' }} title={options.title} key={idx} dataSource={options.dataSource} sizeGroup="piesGroup">
                             <Series argumentField="name" valueField="area" >
                                 <Label visible={true} customizeText={(arg) => idx === 0 ? `$${arg.valueText} (${arg.percentText})` : `${arg.valueText} (${arg.percentText})`} />
                             </Series >

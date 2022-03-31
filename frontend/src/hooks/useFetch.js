@@ -14,16 +14,21 @@ const useFetch = (url) => {
             if (cache.current[url]) {
                 setData(cache.current[url])
                 setStatus('fetched')
-                console.log("used cache")
             }
 
             const response = await fetch(url)
-            const data = await response.json()
 
-            cache.current[url] = data
+            if (response.status == 500) {
+                setStatus('serverError')
+            } else {
+                const data = await response.json()
+                cache.current[url] = data
 
-            setData(data)
-            setStatus('fetched')
+                setData(data)
+                setStatus('fetched')
+            }
+
+
         }
 
         fetchData()

@@ -1,6 +1,7 @@
 import { Box, Toolbar, Container, Grid } from '@mui/material';
 import Domains from '../components/Domains';
 import AddDomain from '../components/AddDomain';
+import LookupDomain from '../components/LookupDomain';
 
 const Dashboard = () => {
 
@@ -16,10 +17,17 @@ const Dashboard = () => {
                 overflow: 'auto',
             }}>
             <Toolbar />
-            <Container maxWidth="lg" sx={{ mt: 4, mb: 4 }}>
-                <Grid item xs={12}>
-                    <AddDomain />
-                    <Domains title="Recently Added Domains" DataGridProps={{ hideFooter: true, disableColumnMenu: true }} />
+            <Container sx={{ mt: 4, mb: 4 }}>
+                <Grid container spacing={2}>
+                    <Grid item xs={12} sm={12} lg={6}>
+                        <AddDomain />
+                    </Grid>
+                    <Grid item xs={12} sm={12} lg={6}>
+                        <LookupDomain />
+                    </Grid>
+                    <Grid item xs={12}>
+                        <Domains title="Sample Domains" DataGridProps={{ hideFooter: true, disableColumnMenu: true }} />
+                    </Grid>
                 </Grid>
             </Container>
         </Box>

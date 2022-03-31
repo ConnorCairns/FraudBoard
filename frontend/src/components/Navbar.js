@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { styled } from '@mui/material/styles';
-import { AppBar, Divider, Drawer, IconButton, ListItemButton, Toolbar, Typography, List, ListItemIcon } from '@mui/material';
+import { AppBar, Divider, Drawer, IconButton, ListItemButton, Toolbar, Typography, List, ListItemIcon, Tooltip } from '@mui/material';
 import MenuIcon from '@material-ui/icons/Menu';
 import { ChevronLeft } from '@material-ui/icons';
 import DashboardIcon from '@mui/icons-material/Dashboard';
@@ -107,16 +107,18 @@ const Navbar = () => {
                         <ListItemText primary="Categories" />
                     </ListItemButton>
                     <Divider />
-                    {state.prevDomains.map((prevDomain, idx) =>
-                        <ListItemButton key={prevDomain} onClick={() => {
-                            dispatch({ type: 'updateDomainHistory', payload: prevDomain })
-                            navigate(`/domains/${prevDomain}`)
-                        }}>
-                            <ListItemIcon >
-                                {numberIcons[idx]}
-                            </ListItemIcon>
-                            <ListItemText disableTypography primary={<Typography type="subtitle1" sx={{ fontSize: '0.5rem' }}>{prevDomain}</Typography>} />
-                        </ListItemButton>
+                    {state.prevDomains.slice(0).reverse().map((prevDomain, idx) =>
+                        <Tooltip key={prevDomain} title={prevDomain}>
+                            <ListItemButton key={prevDomain} onClick={() => {
+                                dispatch({ type: 'updateDomainHistory', payload: prevDomain })
+                                navigate(`/domains/${prevDomain}`)
+                            }}>
+                                <ListItemIcon >
+                                    {numberIcons[idx]}
+                                </ListItemIcon>
+                                <ListItemText disableTypography primary={<Typography sx={{ overflow: 'hidden', fontSize: '0.75rem !important' }}>{prevDomain}</Typography>} />
+                            </ListItemButton>
+                        </Tooltip>
                     )}
                 </List>
             </CustomDrawer >

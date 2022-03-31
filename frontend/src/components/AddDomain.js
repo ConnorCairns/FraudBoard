@@ -4,6 +4,8 @@ import Title from './Title';
 import { useState } from "react";
 import CustomAlert from './CustomAlert';
 import baseUrl from "../utils/url";
+import { useReducerContext } from "../services/ReducerProvider";
+import { useNavigate } from "react-router-dom";
 
 
 const AddDomain = () => {
@@ -14,6 +16,8 @@ const AddDomain = () => {
     const [openInfo, setOpenInfo] = useState(false);
     const [openError, setOpenError] = useState(false);
     const [errorMsg, setErrorMsg] = useState("Something went wrong")
+    const [, dispatch] = useReducerContext();
+    const navigate = useNavigate();
 
     const handleClick = () => {
         setLoading(true)

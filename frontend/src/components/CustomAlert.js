@@ -1,21 +1,31 @@
-import { Box, Alert, Collapse, IconButton } from "@mui/material";
+import { Box, Alert, Collapse, IconButton, Button, Typography } from "@mui/material";
 import CloseIcon from '@mui/icons-material/Close';
+import { useReducerContext } from "../services/ReducerProvider";
+import { useNavigate } from "react-router-dom";
 
 
-const CustomAlert = ({ severity, message, open, onClick }) => {
+const CustomAlert = ({ severity, message, open, onClick, view = null }) => {
+    const [, dispatch] = useReducerContext();
+    const navigate = useNavigate();
+
+    console.log(view)
+
     return (
-        <Box sx={{ width: '100%', mb: '0.5rem' }}>
-            <Collapse in={open}>
-                <Alert severity={severity} action={
-                    <IconButton
-                        aria-label="close"
-                        color="inherit"
-                        size="small"
-                        onClick={() => onClick()}>
-                        <CloseIcon fontSize="inherit" />
-                    </IconButton>
+        <Box sx={{ width: '100%', mb: '0.5rem', display: open ? 'block' : 'contents' }}>
+            <Collapse sx={{ alignItems: 'center' }} in={open}>
+                <Alert sx={{ alignItems: 'center', display: 'flex', textAlign: 'center' }} severity={severity} action={
+                    view ?
+                        <Button size="small" sx={{ ml: 2, float: 'right' }} onClick={view} color="inherit">View</Button>
+                        :
+                        <IconButton
+                            aria-label="close"
+                            color="inherit"
+                            size="small"
+                            onClick={() => onClick()}>
+                            <CloseIcon fontSize="inherit" />
+                        </IconButton>
                 }>
-                    {message}
+                    <Typography variant="body">{message}</Typography>
                 </Alert>
             </Collapse>
         </Box>

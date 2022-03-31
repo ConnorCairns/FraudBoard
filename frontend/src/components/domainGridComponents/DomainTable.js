@@ -15,7 +15,7 @@ const headCells = [
 ]
 
 const DomainTable = ({ titleRef }) => {
-    const [state,] = useReducerContext()    
+    const [state,] = useReducerContext()
 
     const tableData = [
         {
@@ -41,7 +41,7 @@ const DomainTable = ({ titleRef }) => {
         {
             key: 'email',
             colKey: 'Email(s)',
-            value: state.currDomain.emails.join(', ')
+            value: Array.isArray(state.currDomain.emails) ? state.currDomain.emails.join(', ') : state.currDomain.emails
         },
         {
             key: 'org',

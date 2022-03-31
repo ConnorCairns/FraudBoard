@@ -184,7 +184,7 @@ const Domains = ({ title = "Domains", DataGridProps, reqLimit = 5 }) => {
   // const theme = useTheme()
 
   return (
-    <Paper sx={{ p: 2, display: 'flex', flexDirection: 'column', mt: '0.5rem' }}>
+    <Paper sx={{ p: 2, display: 'flex', flexDirection: 'column' }}>
       <Title title={title} />
       {rows !== undefined ?
         <>

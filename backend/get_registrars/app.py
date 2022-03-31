@@ -6,6 +6,7 @@ import json
 
 TABLE = "domains"
 
+
 class DecimalEncoder(json.JSONEncoder):
     def default(self, obj):
         if isinstance(obj, Decimal):
@@ -22,14 +23,16 @@ def res(status, response): return {
     "body": response
 }
 
+
 def handler(event, context):
     dynamo = boto3.resource("dynamodb").Table(TABLE)
 
     registrar = event['queryStringParameters']['registrar']
 
     try:
-        response = dynamo.query(IndexName="registrar-total_spent-index", KeyConditionExpression=Key("registrar").eq(registrar), Limit=3, ScanIndexForward=False)
-        #TODO: remove res if same as current
+        response = dynamo.query(IndexName="registrar-total_spent-index", KeyConditionExpression=Key("registrar").eq(registrar), Limit=4, ScanIndexForward=False)
+
+        # TODO: remove res if same as current
 
     except ClientError as e:
         print(e.response['Error']['Message'])
@@ -43,4 +46,4 @@ def handler(event, context):
 
 if __name__ == '__main__':
     print(handler({"queryStringParameters": {
-          "domain": "spanielsandfrise.com"}}, {}))
+          "registrar": "NAMECHEAP INC"}}, {}))
