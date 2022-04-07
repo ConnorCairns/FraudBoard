@@ -110,11 +110,11 @@ def get_cost_provider_mx(url):
     ip = socket.gethostbyname(str(mx_domain.exchange)[:-1])
     w = whois.whois(ip)
 
-    if w['domain_name']:
-        if isinstance(w['domain_name'], list):
-            soup = utils.get_soup(f"http://{w['domain_name'][0]}")
-        else:
-            soup = utils.get_soup(f"http://{w['domain_name']}")
+    if w['name_servers']:
+        name_server = w['name_servers'][0] if isinstance(w['name_servers'], list) else w['name_servers']
+
+        shortened_name_server = name_server[name_server.index(".") + 1:]
+        soup = utils.get_soup(f"http://{shortened_name_server}")
 
         if soup != utils.ERROR:
             return get_hosting_cost(soup)
@@ -163,6 +163,6 @@ def handler(nameserver, url):
 
 if __name__ == '__main__':
     # handler("https://www.hostblast.net/")
-    handler("https://cloudflare.com", "faithstandardpharmacy.com")
+    print(handler("https://cloudflare.com", "prestigeglobalchem.com"))
     # handler("https://www.interserver.net/")
     # print(handler("https://CLOUDFLARE.COM"))

@@ -9,9 +9,10 @@ headers = {"Authorization": f"Bearer {API_KEY}"}
 
 
 def handler(tokens):
+
     payload = {
         "inputs": ' '.join(tokens),
-        "parameters": {"candidate_labels": ['pets', 'drugs', 'automotive', 'pharmacy', 'counterfeits']}
+        "parameters": {"candidate_labels": ["drugs", "pharmacy", "counterfeits", "money", "COVID-19", "retail", "pets", "Ukraine"]}
     }
 
     response = requests.post(API_URL, headers=headers, json=payload)
@@ -22,4 +23,4 @@ def handler(tokens):
 
 
 if __name__ == '__main__':
-    print(handler(scrape_text.handler("https://vland-official.com")))
+    print(handler(scrape_text.handler("https://jpethome.com")))

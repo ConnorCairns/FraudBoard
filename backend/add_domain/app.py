@@ -20,7 +20,9 @@ def res(status, response): return {
     "statusCode": status,
     "headers": {
         "Content-Type": "application/json",
+        'Access-Control-Allow-Headers': 'Content-Type',
         "Access-Control-Allow-Origin": "*",
+        'Access-Control-Allow-Methods': 'OPTIONS,POST, GET'
     },
     "body": response
 }
@@ -28,7 +30,9 @@ def res(status, response): return {
 
 def clean_data(data):
     if isinstance(data["domain_name"], list):
-        data["domain_name"] = data["domain_name"][0].lower()
+        data["domain_name"] = data["domain_name"][0]
+
+    data["domain_name"] = data["domain_name"].lower()
 
     for date_col in DATE_COLS:
         if date_col in data:
@@ -178,11 +182,13 @@ if __name__ == '__main__':
 
     # urls = ["prestigeglobalchem.com", "omaghenshihtzuhome.com", "southhilltoppuppies.com", "johnbellteacupmaltese.com", "CJKETAMINESTORE.NET", "purechempharma.com", "monarchbulldogs-sa.com", "jungleboyspacks.com", "FAITHSTANDARDPHARMACY.COM", "premiumdachshundpups.com", "K2DRUGSTORE.COM", "STRANDNORDBV.COM", "SKYPHARMACYPILS.COM",
     #         "vland-official.com", "megaketaminestore.com", "ketamineforsale.com", "shihtzupuppiesforsale-us.com", "MORRISAPOTEK.COM", "percocetpills.com", "pelluciddalmatianpuppieshome.com", "DROMEDARYVILLE.COM", "ROYALSITEYORKSHIRETERRIERPUPPIES.COM", "PUPPYSTASHKENNELAU.COM", "cutestdoodleskennel.com", "bradsmaltipoos.com"]
-    urls = ["prestigeglobalchem.com", "purechempharma.com", "REALDOCSNOW.COM", "K2DRUGSTORE.COM", "strandnordbv.com", "megaketaminestore.com", "shihtzupuppiesforsale-us.com",
-            "MORRISAPOTEK.COM", "percocetpills.com", "pelluciddalmatianpuppieshome.com", "DROMEDARYVILLE.COM", "ROYALSITEYORKSHIRETERRIERPUPPIES.COM", "cjketaminestore.net", "JUNGLEBOYSPACKS.COM"]
+    # urls = ['prestigeglobalchem.com', 'omaghenshihtzuhome.com', 'southhilltoppuppies.com', 'johnbellteacupmaltese.com', 'getyourpuppies.com', 'lawnstarmainecooncats.com', 'daisywatsoncattery.com', 'purechempharma.com', 'spanielsandfrise.com', 'surviveukraine.online', 'REALDOCSNOW.COM', 'blueberrydachshund.com', 'inquisitivefrenchbulldog.com', 'FAITHSTANDARDPHARMACY.COM', 'premiumdachshundpups.com', 'godgraceyorkies.com', 'K2DRUGSTORE.COM', 'SKYPHARMACYPILS.COM', 'strandnordbv.com', 'AWESOMECHIHUAHUAS.COM', 'otisineggroup.com', 'megaketaminestore.com', 'shihtzupuppiesforsale-us.com', 'MORRISAPOTEK.COM', 'MONARCHBULLDOGS-SA.COM', 'percocetpills.com', 'pelluciddalmatianpuppieshome.com', 'DROMEDARYVILLE.COM', 'ROYALSITEYORKSHIRETERRIERPUPPIES.COM', 'goldstackmine.com', 'affordablegreatdanepuppies.com', 'dvlalicenseupdate.com', 'cjketaminestore.net', 'cutestdoodleskennel.com', 'KETAMINEFORSALE.COM', 'furrygoldendoodlepuppies.com']
+    urls = ["amberterminalinc.com", "ashmorestoragelogisticsltd.com", "chevron-tankers.com", "externaltank-transshipping.com", "gkprn.com", "gtl-shipping.com", "kargobukllc.com", "lito-tankstorage.com", "moerdijk-logistics.com", "moerdijk-tankstorage.com", "nmz-trans.com", "oakmar-terminalllc.com", "pegasus-pipeline.com", "shoretanks.com", "storage-logistic.com", "sunocopartners-mtlp.com", "tankyardllc.com", "torrancelogistic.com", "lessonpharma.com"]
     for url in urls:
         print(f"Adding {url}")
         event = {'body': json.dumps({
-            "URL": url})}
+            "URL": url}), "queryStringParameters": {
+                "api_key": "myverysecureapikey"
+            }}
 
         print(handler(event, {}))

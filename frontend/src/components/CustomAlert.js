@@ -8,8 +8,6 @@ const CustomAlert = ({ severity, message, open, onClick, view = null }) => {
     const [, dispatch] = useReducerContext();
     const navigate = useNavigate();
 
-    console.log(view)
-
     return (
         <Box sx={{ width: '100%', mb: '0.5rem', display: open ? 'block' : 'contents' }}>
             <Collapse sx={{ alignItems: 'center' }} in={open}>

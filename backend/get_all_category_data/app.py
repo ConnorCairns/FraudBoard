@@ -6,7 +6,7 @@ import json
 
 COST_TABLE = "category_costs"
 #TODO: put this in db and pull from there instead
-CATEGORIES = ["pets", "drugs", "automotive", "pharmacy", "counterfeits"]
+CATEGORIES = ["drugs", "pharmacy", "counterfeits", "money", "COVID-19", "retail", "pets", "Ukraine"]
 
 
 class DecimalEncoder(json.JSONEncoder):
