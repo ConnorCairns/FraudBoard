@@ -45,7 +45,7 @@ Resources:
       PackageType: Image
       Architectures:
         - x86_64
-      Timeout: 60
+      Timeout: 240
       Policies:
         - AmazonDynamoDBFullAccess
         - AmazonRoute53DomainsReadOnlyAccess

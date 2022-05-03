@@ -11,11 +11,19 @@ headers = {
 def get_soup(url):
     # Try request page and give it to bs4
     try:
-        page = requests.get(url, headers=headers)
+        page = requests.get(f"https://{url}", headers=headers, timeout=30)
         if page.status_code == 200:
             return bs4(page.content, 'lxml', multi_valued_attributes=None)
         raise ValueError("Page did not respond with 200")
     # If page errors return 0
     except Exception as e:
         print(e)
+        try:
+            page = requests.get(f"http://{url}", headers=headers, verify=False, timeout=30)
+            if page.status_code == 200:
+                return bs4(page.content, 'lxml', multi_valued_attributes=None)
+            raise ValueError("Page did not respond with 200")
+        except Exception as e:
+            pass
+
         return ERROR

@@ -32,7 +32,6 @@ const CostTable = ({ headCells, tableData, titleRef }) => {
             fetch(`${baseUrl}get_registrars?registrar=${state.currDomain.registrar}`)
                 .then(response => response.json())
                 .then(data => {
-                    console.log(data)
                     //Slice to stay consistent between domains
                     setRegistrars(data.filter(registrar => registrar.domain_name != state.currDomain.domain_name).slice(0, 3))
                 })

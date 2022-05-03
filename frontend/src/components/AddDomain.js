@@ -15,15 +15,15 @@ const AddDomain = () => {
     const [open, setOpen] = useState(false);
     const [openInfo, setOpenInfo] = useState(false);
     const [openError, setOpenError] = useState(false);
+    const [openQueue, setOpenQueue] = useState(false);
     const [errorMsg, setErrorMsg] = useState("Something went wrong")
-    const [, dispatch] = useReducerContext();
-    const navigate = useNavigate();
 
     const handleClick = () => {
         setLoading(true)
         setOpen(false)
         setOpenInfo(false)
         setOpenError(false)
+        setOpenQueue(false)
 
         fetch(`${baseUrl}add-domain?api_key=${apiKey}`, {
             crossDomain: true,
@@ -44,6 +44,10 @@ const AddDomain = () => {
                     setErrorMsg("Unathorized")
                     setOpenError(true)
                     setLoading(false)
+                } else if (response.status === 504) {
+                    setURL("")
+                    setOpenQueue(true)
+                    setLoading(false)
                 } else {
                     setErrorMsg("Something went wrong")
                     setOpenError(true)
@@ -56,6 +60,7 @@ const AddDomain = () => {
         <>
             <CustomAlert severity="success" message="Successfully added domain" open={open} onClick={() => setOpen(false)} />
             <CustomAlert severity="info" message="Domain already exists in database" open={openInfo} onClick={() => setOpenInfo(false)} />
+            <CustomAlert severity="info" message="Domain added to queue" open={openQueue} onClick={() => setOpenQueue(false)} />
             <CustomAlert severity="error" message={errorMsg} open={openError} onClick={() => setOpenError(false)} />
             <Paper sx={{ p: 2, display: 'flex', flexDirection: 'column' }}>
                 <Box component="form" onSubmit={e => { e.preventDefault(); handleClick() }} sx={{ display: 'flex', flexDirection: 'column' }}>

@@ -104,7 +104,11 @@ def get_cost_provider_mx(url):
     split = f"{url.split('www')[-1]}"
     domain = split[1:] if split[0] == '.' else split
 
-    mx_domain = dns.resolver.resolve(domain, 'MX')[0]
+    try:
+        mx_domain = dns.resolver.resolve(domain, 'MX')[0]
+    except dns.resolver.NoAnswer as e:
+        print(e)
+        return 0
 
     # get ip from mx domain
     ip = socket.gethostbyname(str(mx_domain.exchange)[:-1])
@@ -112,9 +116,9 @@ def get_cost_provider_mx(url):
 
     if w['name_servers']:
         name_server = w['name_servers'][0] if isinstance(w['name_servers'], list) else w['name_servers']
-
-        shortened_name_server = name_server[name_server.index(".") + 1:]
-        soup = utils.get_soup(f"http://{shortened_name_server}")
+        split = name_server.split(".")
+        shortened_name_server = f"{split[-2]}.{split[-1]}"
+        soup = utils.get_soup(shortened_name_server)
 
         if soup != utils.ERROR:
             return get_hosting_cost(soup)
@@ -129,7 +133,7 @@ def check_namecheap_redirect(soup):
     # Want to look for the redirect link
     for a in soup.find_all('a', href=True):
         if namecheap_regex.match(a['href']) is not None:
-            soup = utils.get_soup("https://www.namecheap.com/hosting/")
+            soup = utils.get_soup("www.namecheap.com/hosting/")
             if soup != utils.ERROR:
                 return get_hosting_cost(soup)
 
@@ -155,7 +159,6 @@ def handler(nameserver, url):
                 # Last check for namecheap again with new url
                 if cost == 0:
                     cost = check_namecheap_redirect(soup)
-
         return cost
 
     return 0
@@ -163,6 +166,6 @@ def handler(nameserver, url):
 
 if __name__ == '__main__':
     # handler("https://www.hostblast.net/")
-    print(handler("https://cloudflare.com", "prestigeglobalchem.com"))
+    print(handler("cloudflare.com", "torrancelogistic.com"))
     # handler("https://www.interserver.net/")
     # print(handler("https://CLOUDFLARE.COM"))

@@ -76,7 +76,7 @@ const Navbar = () => {
                         <MenuIcon />
                     </IconButton>
                     <Typography component="h1" color="inherit" variant="h6">
-                        Fraud Dashboard
+                        FraudBoard
                     </Typography>
                 </Toolbar>
             </CustomAppBar>

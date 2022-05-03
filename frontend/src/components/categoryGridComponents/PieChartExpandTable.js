@@ -50,7 +50,7 @@ const PieChartExpandTable = () => {
                                 {category}
                             </TableCell>
                             <TableCell align='right' sx={{ fontWeight: 600 }}>
-                                {state.otherCategories[category][0].total_spent}
+                                {state.otherCategories[category][0].total_spent.toFixed(2)}
                             </TableCell>
                             <TableCell align='right' sx={{ fontWeight: 600 }}>
                                 {state.otherCategories[category][0].count}
