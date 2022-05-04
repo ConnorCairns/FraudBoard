@@ -1,12 +1,8 @@
 import { Box, Alert, Collapse, IconButton, Button, Typography } from "@mui/material";
 import CloseIcon from '@mui/icons-material/Close';
-import { useReducerContext } from "../services/ReducerProvider";
-import { useNavigate } from "react-router-dom";
 
 
 const CustomAlert = ({ severity, message, open, onClick, view = null }) => {
-    const [, dispatch] = useReducerContext();
-    const navigate = useNavigate();
 
     return (
         <Box sx={{ width: '100%', mb: '0.5rem', display: open ? 'block' : 'contents' }}>

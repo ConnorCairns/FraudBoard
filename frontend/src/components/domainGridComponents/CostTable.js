@@ -3,7 +3,6 @@ import { useEffect, useState } from 'react';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import IconButton from '@mui/material/IconButton';
 import { styled } from '@mui/material/styles';
-import useFetch from '../../hooks/useFetch';
 import { useReducerContext } from '../../services/ReducerProvider';
 import baseUrl from '../../utils/url';
 import { useNavigate } from 'react-router-dom';
@@ -33,7 +32,7 @@ const CostTable = ({ headCells, tableData, titleRef }) => {
                 .then(response => response.json())
                 .then(data => {
                     //Slice to stay consistent between domains
-                    setRegistrars(data.filter(registrar => registrar.domain_name != state.currDomain.domain_name).slice(0, 3))
+                    setRegistrars(data.filter(registrar => registrar.domain_name !== state.currDomain.domain_name).slice(0, 3))
                 })
         } else {
             setRegistrars(null)

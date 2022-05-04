@@ -4,8 +4,6 @@ import Title from './Title';
 import { useState } from "react";
 import CustomAlert from './CustomAlert';
 import baseUrl from "../utils/url";
-import { useReducerContext } from "../services/ReducerProvider";
-import { useNavigate } from "react-router-dom";
 
 
 const AddDomain = () => {
